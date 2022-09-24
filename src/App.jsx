@@ -22,3 +22,5 @@ function App() {
 }
 
 export default App;
+========
+>>>>>>>> fc67d2f (rename from .js to .jsx):src/App.js
