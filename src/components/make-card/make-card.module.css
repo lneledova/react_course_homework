@@ -1,0 +1,98 @@
+.card {
+    border-radius: 20px;
+    border: solid #00546c;
+    background-color: #eadafe;
+    font-family: italic, serif;
+    margin: 5% 20%;
+}
+
+.card h2 {
+    color: #003241;
+    font-weight: bold;
+    text-decoration: underline solid #003241;
+}
+
+.card h3 {
+    color: #00546c;
+}
+
+.likes {
+    border-radius: 5px;
+    border: solid #00546c;
+    min-width: 30px;
+    padding: 0 2px;
+    width: auto;
+    height: 30px;
+    margin-right: 2%;
+    margin-left: 60%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.likesHeart {
+    display: flex;
+    flex-direction: row;
+}
+
+
+.grayHeart {
+    margin-bottom: 1%;
+
+    position: relative;
+    width: 40px;
+    height: 36px;
+}
+
+.grayHeart::before, .grayHeart::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 20px;
+    height: 32px;
+    border-radius: 20px 20px 0 0;
+    background: gray;
+}
+
+.grayHeart::before {
+    left: 20px;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+}
+
+.grayHeart::after {
+    left: 0;
+    transform: rotate(45deg);
+    transform-origin: 100% 100%;
+}
+
+.redHeart {
+    margin-bottom: 1%;
+
+    position: relative;
+    width: 40px;
+    height: 36px;
+}
+
+.redHeart::before, .redHeart::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 20px;
+    height: 32px;
+    border-radius: 20px 20px 0 0;
+    background: red;
+}
+
+.redHeart::before {
+    left: 20px;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+}
+
+.redHeart::after {
+    left: 0;
+    transform: rotate(45deg);
+    transform-origin: 100% 100%;
+}
