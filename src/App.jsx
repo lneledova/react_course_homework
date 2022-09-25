@@ -2,7 +2,7 @@ import './App.css';
 
 import data from './assets/mock-data.json'
 
-import {MakeCard} from "./components/make-card/make-card";
+import {Card} from "./components/card/card";
 
 function App() {
 
@@ -10,7 +10,7 @@ function App() {
     <div className="App">
 
       <div>
-        {data.map(item => <MakeCard fields={item}/>)}
+        {data.map(item => <Card title={item.title} text={item.text} currentLikes={item.currentLikes} />)}
       </div>
 
     </div>

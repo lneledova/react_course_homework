@@ -1,12 +1,12 @@
 import React, {useState} from 'react'
 
 // Imports CSS module as JS object
-import s from './make-card.module.css'
+import s from './card.module.css'
 
+export function Card({title, text, currentLikes}) {
 
-export function MakeCard({fields}) {
     const [like, setLike] = useState({
-        counter: fields.currentLikes,
+        counter: currentLikes,
         isLike: 1,
         color: "gray"
     })
@@ -25,8 +25,8 @@ export function MakeCard({fields}) {
         <>
             <div className={s.card}>
 
-                <h2>{fields.title}</h2>
-                <h3>{fields.text}</h3>
+                <h2>{title}</h2>
+                <h3>{text}</h3>
                 <div className={s.likesHeart}>
                     <div className={s.likes}>{like.counter}</div>
                     <div className={like.color === "red" ? s.redHeart : s.grayHeart} onClick={likeDislike}></div>
