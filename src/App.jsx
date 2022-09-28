@@ -10,7 +10,11 @@ function App() {
     <div className="App">
 
       <div>
-        {data.map(item => <Card title={item.title} text={item.text} currentLikes={item.currentLikes} />)}
+          {data.map(item => <Card
+              title={item.title}
+              text={item.text}
+              currentLikes={item.currentLikes}
+          />)}
       </div>
 
     </div>
