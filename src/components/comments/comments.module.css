@@ -1,0 +1,134 @@
+.openButton {
+    border-radius: 5px;
+    border: solid #00546c;
+    padding: 0px 5px;
+    height: 30px;
+    width: auto;
+    margin-right: 35%;
+    margin-left: 35%;
+    margin-bottom: 2%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.noComments {
+    padding: 0px 5px;
+    height: 30px;
+    width: auto;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 2%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.comments {
+    margin: 1% 20%;
+}
+.comment {
+    border: solid #00546c;
+    padding: 1% 1%;
+    margin-bottom: 1%;
+    background-color: #fed5c9;
+}
+
+.author {
+    font-size: 100%;
+    margin-left: 1%;
+    text-align: left;
+    font-weight: bold;
+    color: #721900;
+}
+.commentText {
+    color: #721900;
+    font-size: 100%;
+}
+
+.deleteComment {
+    border-radius: 5px;
+    border: solid #721900;
+    background-color: #ffaf99;
+    color: #721900;
+    width: 10%;
+    margin-top: 1%;
+    padding: 1% 2%;
+    margin-right: 2%;
+    margin-left: 80%;
+}
+
+.deleteComment:hover {
+    box-shadow: inset 0 0 10px 5px rgba(163,36,0,0.3);
+}
+
+.formAddComment {
+    border-radius: 5px;
+    border: solid #00546c;
+    margin: 1% 25%;
+    background-color: #cfc9de;
+}
+
+.headerForm {
+    color: #332b46;
+    font-weight: bold;
+    font-size: 120%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+.authorInput {
+    border-radius: 5px;
+    border: solid #332b46;
+    background-color: #cfc9de;
+    margin: 1% 10%;
+    width: 40%;
+    padding: 1% 1%;
+    font-family: italic, serif;
+    font-size: 100%;
+}
+
+.authorInput:focus {
+    background-color: transparent;
+    outline: none;
+}
+
+.authorInput::placeholder {
+    font-family: italic, serif;
+    color: #493d65;
+}
+
+.commentInput {
+    border-radius: 5px;
+    border: solid #332b46;
+    background-color: #cfc9de;
+    margin: 1% 10%;
+    width: 70%;
+    padding: 1% 1%;
+    font-family: italic, serif;
+    font-size: 100%;
+}
+
+.commentInput:focus {
+    background-color: transparent;
+    outline: none;
+}
+
+.commentInput::placeholder {
+    color: #493d65;
+    font-family: italic, serif;
+}
+
+.addButton {
+    border-radius: 5px;
+    border: solid #332b46;
+    background-color: #b4abcb;
+    margin: 1% 30%;
+    padding: 1% 1%;
+}
+
+.addButton:hover{
+    box-shadow: inset 0 0 10px 5px rgba(102,86,141,0.30);
+}

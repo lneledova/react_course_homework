@@ -1,24 +1,83 @@
-import './App.css';
+import React, {useState, useEffect} from 'react'
 
-import data from './assets/mock-data.json'
+import s from './App.module.css';
+
+import {getArticles} from './loaders_data/get-articles.js'
 
 import {Card} from "./components/card/card";
 
-function App() {
+export function App() {
+    const [articles, setArticles] = useState(null)
+    const [article, setArticle] = useState({
+            articleId: 100,
+            title: null,
+            text: null,
+            currentLikes: 0,
+            commentsCount: 0
+        }
+    )
 
-  return (
-    <div className="App">
+    useEffect(() => {
+        getArticles().then(fetchedArticles => setArticles(fetchedArticles))
+    }, [])
 
-      <div>
-          {data.map(item => <Card
-              title={item.title}
-              text={item.text}
-              currentLikes={item.currentLikes}
-          />)}
-      </div>
+    const addArticle = () => {
+        setArticle({
+            ...article,
+            articleId: article.articleId + 1
+        })
+        const newArticle = {...article}
+        setArticles([...articles, newArticle])
+    }
 
-    </div>
-  );
+    const setTitle = event => {
+        const { value } = event.target
+        setArticle({
+                ...article,
+                title: value
+            }
+        )
+    }
+
+    const setText = event => {
+        const { value } = event.target
+        setArticle({
+                ...article,
+                text: value
+            }
+        )
+    }
+
+    return (
+        <>
+            {articles ?
+                <div className={s.App}>
+
+                    <div>
+                        {articles.map(item => <Card
+                            articleId={item.articleId}
+                            title={item.title}
+                            text={item.text}
+                            currentLikes={item.currentLikes}
+                            commentsCount={item.commentsCount}
+                        />)}
+                    </div>
+
+                </div>
+                :
+                <div className={s.loadingPage}>
+                    Loading articles...
+                </div>
+            }
+
+            <div className={s.formAddComment}>
+                <div className={s.headerForm}>Write your own article</div>
+                <input className={s.titleInput} type="text" value={article.title} onChange={setTitle} placeholder="Your title" />
+                <textarea className={s.textInput} placeholder="Your text of article" value={article.text} onChange={setText} />
+                <div className={s.addButton} onClick={addArticle}>Add</div>
+            </div>
+        </>
+    );
 }
 
 export default App;
