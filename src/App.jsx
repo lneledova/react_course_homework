@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import s from './App.module.css';
+import s from './App.module.scss';
 
 import {getArticles} from './loaders_data/get-articles.js'
 
@@ -70,7 +70,7 @@ export function App() {
                 </div>
             }
 
-            <div className={s.formAddComment}>
+            <div className={s.formAddArticle}>
                 <div className={s.headerForm}>Write your own article</div>
                 <input className={s.titleInput} type="text" value={article.title} onChange={setTitle} placeholder="Your title" />
                 <textarea className={s.textInput} placeholder="Your text of article" value={article.text} onChange={setText} />

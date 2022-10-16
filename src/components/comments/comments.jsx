@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 
 // Imports CSS module as JS object
-import s from './comments.module.css'
+import s from './comments.module.scss'
 
 import {getComments} from '../../loaders_data/get-comments-by-article.js'
 
@@ -64,7 +64,8 @@ export function Comments({articleId, commentsCount, changeSize}) {
     return (
         <>
             <div className={s.comments}>
-                <h3>There are {commentsSize === 0 ? "no" : commentsSize} comments</h3>
+                <h3>There {commentsSize === 0 ? "is no comment" :
+                    commentsSize === 1 ? "is " + commentsSize + " comment" : "are " + commentsSize + " comments"}</h3>
                 { comments ?
                     comments.map(item => <div className={s.comment}>
                         <div className={s.author}> {item.author} </div>
@@ -73,7 +74,7 @@ export function Comments({articleId, commentsCount, changeSize}) {
                     </div>)
                     :
                     <div>
-                        Comments is loading...
+                        Comments are loading...
                     </div>
                 }
             </div>

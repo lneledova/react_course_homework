@@ -1,0 +1,157 @@
+@import "../../styles/mixins.module.scss";
+@import "../../styles/vars.module.scss";
+
+
+.card {
+    @include borders-and-background-color($simpleBlueColor, $bigBorderRadius, $violetCardColor);
+
+    margin: 2% 20%;
+
+    & h2 {
+        color: $darkBlueColor;
+        text-decoration: underline solid $darkBlueColor;
+    }
+
+    & h3 {
+        color: $simpleBlueColor;
+    }
+}
+
+.likes {
+    @include flex-total-center(row);
+    @include borders-and-background-color($simpleBlueColor, $smallBorderRadius, $violetCardColor);
+
+    min-width: 30px;
+    padding: 0 2px;
+    width: auto;
+    height: 35px;
+    margin-right: 2%;
+    margin-left: auto;
+}
+
+.likesHeart {
+    display: flex;
+    flex-direction: row;
+}
+
+
+.heart {
+    margin-bottom: 1%;
+    margin-right: 5%;
+    position: relative;
+
+    width: 40px;
+    height: 36px;
+
+    &::before, &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        width: 20px;
+        height: 32px;
+        border-radius: 20px 20px 0 0;
+    }
+
+    &::before {
+        left: 20px;
+        transform: rotate(-45deg);
+        transform-origin: 0 100%;
+    }
+
+    &::after {
+        left: 0;
+        transform: rotate(45deg);
+        transform-origin: 100% 100%;
+    }
+
+    &-color-red {
+        &::before, &::after {
+            background: red;
+        }
+    }
+
+    &-color-gray {
+        &::before, &::after {
+            background: gray;
+        }
+    }
+}
+
+.openButton {
+    @include flex-total-center(row);
+    @include borders-and-background-color($simpleBlueColor, $smallBorderRadius, $pinkAddCardColor);
+
+    padding: 0px 5px;
+    height: auto;
+    width: auto;
+    margin-right: 30%;
+    margin-left: 30%;
+    margin-bottom: 2%;
+
+    &:hover {
+        box-shadow: inset 0 0 10px 5px rgba(0%,33%,42%,0.25);
+    }
+}
+
+@media (max-width: 991px) {
+    .card {
+        @include font-settings($simpleTextSizeSmall, normal);
+
+        & h2 {
+            @include font-settings($bigTextSizeSmall, bold);
+        }
+    }
+}
+
+@media (min-width: 991px) and (max-width: 1199px) {
+    .card {
+        @include font-settings($simpleTextSizeMedium, normal);
+
+        & h2 {
+            @include font-settings($bigTextSizeMedium, bold);
+        }
+    }
+}
+
+@media (min-width: 1200px) {
+    .card {
+        @include font-settings($simpleTextSizeLarge, normal);
+
+        & h2 {
+            @include font-settings($bigTextSizeLarge, bold);
+        }
+    }
+}
+
+@media (max-width: 991px) {
+    .heart {
+        width: 30px;
+        height: 27px;
+
+        &::before, &::after {
+            width: 15px;
+            height: 24px;
+            border-radius: 15px 15px 0 0;
+        }
+
+        &::before {
+            left: 15px;
+        }
+    }
+
+    .likes {
+        min-width: 20px;
+        height: 22px;
+    }
+}
+
+@media (max-width: 860px) {
+    .openButton {
+        margin-right: 10%;
+        margin-left: 10%;
+    }
+
+    .card {
+        margin: 2% 5%;
+    }
+}

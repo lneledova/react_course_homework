@@ -1,16 +1,19 @@
 import React, {useState} from 'react'
+import classnames from 'classnames/bind'
 
 // Imports CSS module as JS object
-import s from './card.module.css'
+import s from './card.module.scss'
 
 import {Comments} from "../comments/comments";
+
+const cx = classnames.bind(s);
 
 export function Card({articleId, title, text, currentLikes, commentsCount}) {
 
     const [like, setLike] = useState({
         counter: currentLikes,
         isLike: 1,
-        color: "gray"
+        color: 'gray'
     })
 
     const [commentsInfo, setCommentsInfo] = useState({
@@ -23,7 +26,7 @@ export function Card({articleId, title, text, currentLikes, commentsCount}) {
         setLike(oldLike => ({
             counter: oldLike.counter + oldLike.isLike,
             isLike: oldLike.isLike * (-1),
-            color: oldLike.isLike === 1 ? "red" : "gray"
+            color: oldLike.isLike === 1 ? 'red' : 'gray'
         }))
     }
 
@@ -51,7 +54,7 @@ export function Card({articleId, title, text, currentLikes, commentsCount}) {
                 <h3>{text}</h3>
                 <div className={s.likesHeart}>
                     <div className={s.likes}>{like.counter}</div>
-                    <div className={like.color === "red" ? s.redHeart : s.grayHeart} onClick={likeDislike}></div>
+                    <div className={cx('heart', `heart-color-${like.color}`)} onClick={likeDislike}></div>
                 </div>
 
 
