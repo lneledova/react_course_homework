@@ -1,0 +1,219 @@
+@import "../../styles/mixins.module.scss";
+@import "../../styles/vars.module.scss";
+
+
+.noComments {
+    @include flex-total-center(row);
+
+    padding: 0px 5px;
+    height: 30px;
+    width: auto;
+
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 2%;
+}
+
+.comments {
+    margin: 1% 20%;
+}
+.comment {
+    @include borders-and-background-color($darkRedColor, $smallBorderRadius, #fed5c9);
+
+    padding: 1%;
+    margin-bottom: 1%;
+}
+
+.author {
+    margin-left: 1%;
+    text-align: left;
+    color: $darkRedColor;
+}
+.commentText {
+    color: $darkRedColor;
+}
+
+.deleteComment {
+    @include borders-and-background-color($darkRedColor, $smallBorderRadius, #ffaf99);
+
+    color: $darkRedColor;
+    min-width: 10%;
+    width: auto;
+    margin-top: 1%;
+    padding: 1% 2%;
+    margin-right: 2%;
+    margin-left: 80%;
+
+    &:hover {
+        box-shadow: inset 0 0 10px 5px rgba(163,36,0,0.3);
+    }
+}
+
+
+.formAddComment {
+    @include borders-and-background-color($darkVioletColor, $smallBorderRadius, $pinkAddCardColor);
+
+    margin: 1% 25%;
+}
+
+.headerForm {
+    color: $darkVioletColor;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+.authorInput {
+    @include borders-and-background-color($darkVioletColor, $smallBorderRadius, $pinkAddCardColor);
+
+    margin: 1% 10%;
+    width: 40%;
+    padding: 1%;
+
+
+    &:focus {
+        background-color: transparent;
+        outline: none;
+    }
+
+    &::placeholder {
+        color: $violetPlaceholderColor;
+    }
+}
+
+
+.commentInput {
+    @include borders-and-background-color($darkVioletColor, $smallBorderRadius, $pinkAddCardColor);
+
+    margin: 1% 10%;
+    width: 70%;
+    padding: 1%;
+
+    &:focus {
+        background-color: transparent;
+        outline: none;
+    }
+
+    &::placeholder {
+        color: $violetPlaceholderColor;
+    }
+}
+
+
+.addButton {
+    @include borders-and-background-color($darkVioletColor, $smallBorderRadius, $violetAddButtonColor);
+
+    margin: 1% 30%;
+    padding: 1%;
+
+    &:hover {
+        box-shadow: inset 0 0 10px 5px rgba(102,86,141,0.30);
+    }
+}
+
+@media (max-width: 991px) {
+    .noComments .comments {
+        & h3 {
+            @include font-settings($simpleTextSizeSmall, bold);
+        }
+    }
+
+    .author {
+        @include font-settings($simpleTextSizeSmall, bold);
+    }
+
+    .commentText {
+        @include font-settings($simpleTextSizeSmall, normal);
+    }
+
+    .headerForm {
+        @include font-settings($bigTextSizeSmall, bold);
+    }
+
+    .authorInput {
+        @include font-settings($simpleTextSizeSmall, normal);
+
+        &::placeholder {
+            @include font-settings($simpleTextSizeSmall, normal);
+        }
+    }
+
+    .commentInput {
+        @include font-settings($simpleTextSizeSmall, normal);
+
+        &::placeholder {
+            @include font-settings($simpleTextSizeSmall, normal);
+        }
+    }
+}
+
+@media (min-width: 991px) and (max-width: 1199px) {
+    .noComments .comments {
+        & h3 {
+            @include font-settings($simpleTextSizeMedium, bold);
+        }
+    }
+
+    .author {
+        @include font-settings($simpleTextSizeMedium, bold);
+    }
+
+    .commentText {
+        @include font-settings($simpleTextSizeMedium, normal);
+    }
+
+    .headerForm {
+        @include font-settings($bigTextSizeMedium, bold);
+    }
+
+    .authorInput {
+        @include font-settings($simpleTextSizeSmall, normal);
+
+        &::placeholder {
+            @include font-settings($simpleTextSizeSmall, normal);
+        }
+    }
+
+    .commentInput {
+        @include font-settings($simpleTextSizeSmall, normal);
+
+        &::placeholder {
+            @include font-settings($simpleTextSizeSmall, normal);
+        }
+    }
+}
+
+@media (min-width: 1200px) {
+    .noComments .comments {
+        & h3 {
+            @include font-settings($simpleTextSizeLarge, bold);
+        }
+    }
+
+    .author {
+        @include font-settings($simpleTextSizeMedium, bold);
+    }
+
+    .commentText {
+        @include font-settings($simpleTextSizeMedium, normal);
+    }
+
+    .headerForm {
+        @include font-settings($bigTextSizeMedium, bold);
+    }
+
+    .authorInput {
+        @include font-settings($simpleTextSizeMedium, normal);
+
+        &::placeholder {
+            @include font-settings($simpleTextSizeMedium, normal);
+        }
+    }
+
+    .commentInput {
+        @include font-settings($simpleTextSizeMedium, normal);
+
+        &::placeholder {
+            @include font-settings($simpleTextSizeMedium, normal);
+        }
+    }
+}

@@ -1,0 +1,158 @@
+@import "styles/mixins.module.scss";
+@import "styles/vars.module.scss";
+
+.App {
+  text-align: center;
+}
+
+.loadingPage {
+  @include font-settings(200%, bold);
+
+  text-align: center;
+  color: $darkBlueColor;
+}
+
+.formAddArticle {
+  @include flex-total-center(column);
+  @include borders-and-background-color($darkVioletColor, $bigBorderRadius, $pinkAddCardColor);
+
+  margin: 1% 25%;
+}
+
+.headerForm {
+  color: $darkVioletColor;
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+
+.titleInput {
+  @include borders-and-background-color($darkVioletColor, $smallBorderRadius, $pinkAddCardColor);
+
+  margin: 1% 10%;
+  width: 40%;
+  padding: 1% 1%;
+
+  &:focus {
+    background-color: transparent;
+    outline: none;
+  }
+
+  &::placeholder {
+    color: $violetPlaceholderColor;
+  }
+}
+
+.textInput {
+  @include borders-and-background-color($darkVioletColor, $smallBorderRadius, $pinkAddCardColor);
+
+  margin: 1% 10%;
+  width: 70%;
+  padding: 1%;
+
+  &:focus {
+    background-color: transparent;
+    outline: none;
+  }
+
+  &::placeholder {
+    color: $violetPlaceholderColor;
+  }
+}
+
+
+.addButton {
+  @include borders-and-background-color($darkVioletColor, $smallBorderRadius, $violetAddButtonColor);
+
+  margin: 1% 30%;
+  padding: 1% 10%;
+
+  &:hover {
+    box-shadow: inset 0 0 10px 5px rgba(102,86,141,0.30);
+  }
+}
+
+
+@media (max-width: 991px) {
+  .formAddArticle {
+    @include font-settings($simpleTextSizeSmall, normal);
+  }
+
+  .headerForm {
+    @include font-settings($bigTextSizeSmall, bold);
+  }
+
+  .titleInput {
+    @include font-settings($simpleTextSizeSmall, normal);
+
+    &::placeholder {
+      @include font-settings($simpleTextSizeSmall, normal);
+    }
+  }
+
+  .textInput {
+    @include font-settings($simpleTextSizeSmall, normal);
+
+    &::placeholder {
+      @include font-settings($simpleTextSizeSmall, normal);
+    }
+  }
+}
+
+@media (min-width: 991px) and (max-width: 1199px) {
+  .formAddArticle {
+    @include font-settings($simpleTextSizeMedium, normal);
+  }
+
+  .headerForm {
+    @include font-settings($bigTextSizeMedium, bold);
+  }
+
+  .titleInput {
+    @include font-settings($simpleTextSizeSmall, normal);
+
+    &::placeholder {
+      @include font-settings($simpleTextSizeSmall, normal);
+    }
+  }
+
+  .textInput {
+    @include font-settings($simpleTextSizeSmall, normal);
+
+    &::placeholder {
+      @include font-settings($simpleTextSizeSmall, normal);
+    }
+  }
+
+}
+
+@media (min-width: 1200px) {
+  .formAddArticle {
+    @include font-settings($simpleTextSizeLarge, normal);
+  }
+
+  .headerForm {
+    @include font-settings($bigTextSizeLarge, bold);
+  }
+
+  .titleInput {
+    @include font-settings($simpleTextSizeMedium, normal);
+
+    &::placeholder {
+      @include font-settings($simpleTextSizeMedium, normal);
+    }
+  }
+
+  .textInput {
+    @include font-settings($simpleTextSizeMedium, normal);
+
+    &::placeholder {
+      @include font-settings($simpleTextSizeMedium, normal);
+    }
+  }
+}
+
+@media (max-width: 860px) {
+  .formAddArticle {
+    margin: 1% 5%;
+  }
+}

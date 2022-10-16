@@ -1,0 +1,18 @@
+@mixin font-settings($size, $weight) {
+    font-family: Georgia, serif;
+    font-size: $size;
+    font-weight: $weight;
+}
+
+@mixin flex-total-center($direction) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: $direction;
+}
+
+@mixin borders-and-background-color($border_color, $radius, $color) {
+    border-radius: $radius;
+    border: solid $border_color;
+    background-color: $color;
+}
