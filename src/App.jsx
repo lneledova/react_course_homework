@@ -8,6 +8,7 @@ import {Card} from "./components/card/card";
 
 export function App() {
     const [articles, setArticles] = useState(null)
+    const [sorted, setSorted] = useState(0)
     const [article, setArticle] = useState({
             articleId: 100,
             title: null,
@@ -22,11 +23,17 @@ export function App() {
     }, [])
 
     const addArticle = () => {
+        const date = new Date()
+        const currDate = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay()
         setArticle({
             ...article,
+            createdAt: currDate,
             articleId: article.articleId + 1
         })
-        const newArticle = {...article}
+        const newArticle = {
+            ...article,
+            createdAt: currDate
+        }
         setArticles([...articles, newArticle])
     }
 
@@ -48,19 +55,71 @@ export function App() {
         )
     }
 
+    const sortDateIncCards = () => {
+        articles.sort((o1, o2) => {
+            return new Date(o1.createdAt) -  new Date(o2.createdAt)
+        })
+        setSorted(sorted + 1)
+    }
+
+    const sortDateDecCards = () => {
+        articles.sort((o1, o2) => {
+            return new Date(o2.createdAt) -  new Date(o1.createdAt)
+        })
+        setSorted(sorted + 1)
+    }
+
+    const sortLikeIncCards = () => {
+        articles.sort((o1, o2) => {
+            return new Date(o1.currentLikes) -  new Date(o2.currentLikes)
+        })
+        setSorted(sorted + 1)
+    }
+
+    const sortLikeDecCards = () => {
+        articles.sort((o1, o2) => {
+            return new Date(o2.currentLikes) -  new Date(o1.currentLikes)
+        })
+        setSorted(sorted + 1)
+    }
+
+
+
     return (
         <>
             {articles ?
                 <div className={s.App}>
 
+                    <h2>Select sorting method for cards:</h2>
+                    <h3>
+                        <div>
+                            <input type="radio" onChange={sortDateIncCards} name="sort" />
+                                <label>By date increasing</label>
+
+                                <input type="radio" onChange={sortDateDecCards} name="sort"/>
+                                    <label>By date decreasing</label>
+                                <br></br>
+
+                                <input type="radio" onChange={sortLikeIncCards} name="sort"/>
+                                <label>By likes increasing</label>
+
+                                <input type="radio" onChange={sortLikeDecCards} name="sort"/>
+                                <label>By likes decreasing</label>
+                        </div>
+                    </h3>
+
                     <div>
-                        {articles.map(item => <Card
-                            articleId={item.articleId}
-                            title={item.title}
-                            text={item.text}
-                            currentLikes={item.currentLikes}
-                            commentsCount={item.commentsCount}
-                        />)}
+                        {articles.map(item =>
+                            <div key={item.articleId}>
+                                <Card
+                                    articleId={item.articleId}
+                                    title={item.title}
+                                    text={item.text}
+                                    currentLikes={item.currentLikes}
+                                    commentsCount={item.commentsCount}
+                                    createdAt={item.createdAt}
+                                />
+                            </div>)}
                     </div>
 
                 </div>

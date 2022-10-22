@@ -3,6 +3,15 @@
 
 .App {
   text-align: center;
+
+  & h2 {
+    color: $darkBlueColor;
+    text-decoration: underline solid $darkBlueColor;
+  }
+
+  & h3 {
+    color: $simpleBlueColor;
+  }
 }
 
 .loadingPage {
