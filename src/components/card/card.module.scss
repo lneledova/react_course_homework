@@ -5,7 +5,7 @@
 .card {
     @include borders-and-background-color($simpleBlueColor, $bigBorderRadius, $violetCardColor);
 
-    margin: 2% 20%;
+    margin: 2% 15%;
 
     & > h2 {
         color: $darkBlueColor;
@@ -14,6 +14,18 @@
 
     & h3 {
         color: $simpleBlueColor;
+    }
+
+    & img {
+        margin-left: 87%;
+        margin-right: 1%;
+        width: 45px;
+        margin-bottom: 2%;
+    }
+
+    & .date {
+        color: $darkBlueColor;
+        margin-right: 75%;
     }
 }
 
@@ -93,37 +105,87 @@
     }
 }
 
+.titleInput {
+    @include borders-and-background-color($darkBlueColor, $smallBorderRadius, $violetCardColor);
+
+    margin: 1% 10%;
+    width: 40%;
+    padding: 1% 1%;
+
+    &:focus {
+        background-color: transparent;
+        outline: none;
+    }
+
+    &::placeholder {
+        color: $darkBlueColor;
+    }
+}
+
+.textInput {
+    @include borders-and-background-color($darkBlueColor, $smallBorderRadius, $violetCardColor);
+
+    margin: 1% 10%;
+    width: 70%;
+    padding: 1%;
+
+    &:focus {
+        background-color: transparent;
+        outline: none;
+    }
+
+    &::placeholder {
+        color: $simpleBlueColor;
+    }
+}
+
+
+.saveEditing {
+    @include borders-and-background-color($darkBlueColor, $smallBorderRadius, #c9a0dc);
+
+    color: $darkVioletColor;
+    min-width: 10%;
+    width: auto;
+    padding: 1% 2%;
+    margin: 1% 15% 1% 70%;
+
+    &:hover {
+        box-shadow: inset 0 0 10px 5px rgba(79,63,86,0.3);
+    }
+}
+
 @media (max-width: $smallScreenMaxWidth) {
     .card {
         @include font-settings($simpleTextSizeSmall, normal);
 
-        & > h2 {
+        & > h2, & .date {
             @include font-settings($bigTextSizeSmall, bold);
         }
+
+        & img {
+            width: 30px;
+        }
+
+        margin: 2% 5%;
     }
-}
 
-@media (max-width: $mediumScreenMaxWidth) {
-    .card {
-        @include font-settings($simpleTextSizeMedium, normal);
+    .titleInput {
+        @include font-settings($simpleTextSizeSmall, normal);
 
-        & > h2 {
-            @include font-settings($bigTextSizeMedium, bold);
+        &::placeholder {
+            @include font-settings($simpleTextSizeSmall, normal);
         }
     }
-}
 
-@media (min-width: $largeScreenMinWidth) {
-    .card {
-        @include font-settings($simpleTextSizeLarge, normal);
+    .textInput {
+        @include font-settings($simpleTextSizeSmall, normal);
 
-        & > h2 {
-            @include font-settings($bigTextSizeLarge, bold);
+        &::placeholder {
+            @include font-settings($simpleTextSizeSmall, normal);
         }
     }
-}
 
-@media (max-width: $smallScreenMaxWidth) {
+
     .heart {
         width: 30px;
         height: 27px;
@@ -144,6 +206,59 @@
         height: 22px;
     }
 }
+
+@media (min-width: 991px) and (max-width: 1199px) {
+    .card {
+        @include font-settings($simpleTextSizeMedium, normal);
+
+        & h2, & .date {
+            @include font-settings($bigTextSizeMedium, bold);
+        }
+    }
+
+    .titleInput {
+        @include font-settings($simpleTextSizeSmall, normal);
+
+        &::placeholder {
+            @include font-settings($simpleTextSizeSmall, normal);
+        }
+    }
+
+    .textInput {
+        @include font-settings($simpleTextSizeSmall, normal);
+
+        &::placeholder {
+            @include font-settings($simpleTextSizeSmall, normal);
+        }
+    }
+}
+
+@media (min-width: 1200px) {
+    .card {
+        @include font-settings($simpleTextSizeLarge, normal);
+
+        & h2, & .date {
+            @include font-settings($bigTextSizeLarge, bold);
+        }
+    }
+
+    .titleInput {
+        @include font-settings($simpleTextSizeMedium, normal);
+
+        &::placeholder {
+            @include font-settings($simpleTextSizeMedium, normal);
+        }
+    }
+
+    .textInput {
+        @include font-settings($simpleTextSizeMedium, normal);
+
+        &::placeholder {
+            @include font-settings($simpleTextSizeMedium, normal);
+        }
+    }
+}
+
 
 @media (max-width: $superSmallScreenMaxWidth) {
     .openButton {

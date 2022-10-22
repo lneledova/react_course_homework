@@ -5,10 +5,11 @@ import classnames from 'classnames/bind'
 import s from './card.module.scss'
 
 import {Comments} from "../comments/comments";
+import EditImg from '../../img/edit_img_violet.png';
 
 const cx = classnames.bind(s);
 
-export function Card({articleId, title, text, currentLikes, commentsCount}) {
+export function Card({articleId, title, text, currentLikes, commentsCount, createdAt}) {
 
     const [like, setLike] = useState({
         counter: currentLikes,
@@ -19,6 +20,15 @@ export function Card({articleId, title, text, currentLikes, commentsCount}) {
     const [commentsInfo, setCommentsInfo] = useState({
         show: -1,
         count: commentsCount
+    })
+
+    const [article, setArticle] = useState({
+        title: title,
+        newTitle: title,
+        text: text,
+        newText: text,
+        isEditing: false,
+        createdAt: createdAt
     })
 
 
@@ -45,13 +55,62 @@ export function Card({articleId, title, text, currentLikes, commentsCount}) {
         )
     }
 
+    const startEdit = () => {
+        setArticle({
+            ...article,
+            isEditing: true,
+            newText: article.text
+        })
+    }
+
+    const setNewText = event => {
+        const { value } = event.target
+        setArticle( {
+                ...article,
+                newText: value
+            }
+        )
+    }
+
+    const setNewTitle = event => {
+        const { value } = event.target
+        setArticle( {
+                ...article,
+                newTitle: value
+            }
+        )
+    }
+
+    const endEdit = () => {
+        setArticle({
+            ...article,
+            isEditing: false,
+            text: article.newText,
+            title: article.newTitle
+        })
+    }
+
 
     return (
         <>
             <div className={s.card}>
-
-                <h2>{title}</h2>
-                <h3>{text}</h3>
+                <div className={s.date}>{article.createdAt}</div>
+                {article.isEditing ?
+                    <>
+                        <input className={s.titleInput} type="text" value={article.newTitle} onChange={setNewTitle} placeholder={article.newTitle} />
+                        <textarea className={s.textInput} placeholder={article.newText} value={article.newText} onChange={setNewText} />
+                    </>
+                :
+                    <>
+                        <h2>{article.title}</h2>
+                        <h3>{article.text}</h3>
+                    </>
+                }
+                {article.isEditing ?
+                    <div className={s.saveEditing} onClick={endEdit}> save </div>
+                    :
+                    <img src={EditImg} onClick={startEdit}/>
+                }
                 <div className={s.likesHeart}>
                     <div className={s.likes}>{like.counter}</div>
                     <div className={cx('heart', `heart-color-${like.color}`)} onClick={likeDislike}></div>
