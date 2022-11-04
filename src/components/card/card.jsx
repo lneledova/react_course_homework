@@ -13,7 +13,10 @@ export function Card({articleId, title, text, currentLikes, commentsCount}) {
         color: "gray"
     })
 
-    const [showComments, setShowComments] = useState(-1)
+    const [commentsInfo, setCommentsInfo] = useState({
+        show: -1,
+        count: commentsCount
+    })
 
 
     const likeDislike = () => {
@@ -25,7 +28,18 @@ export function Card({articleId, title, text, currentLikes, commentsCount}) {
     }
 
     const openComments = () => {
-        setShowComments(showComments * (-1))
+        setCommentsInfo(oldCommentsInfo => ({
+            show: (-1) * oldCommentsInfo.show,
+            count: commentsCount
+        }))
+    }
+
+    const changeSize = (value) => {
+        setCommentsInfo({
+                show: commentsInfo.show,
+                count: commentsInfo.count + value
+            }
+        )
     }
 
 
@@ -42,15 +56,21 @@ export function Card({articleId, title, text, currentLikes, commentsCount}) {
 
 
                     <div className={s.openButton} onClick={openComments}>
-                        { showComments < 0 ?
-                           <p> Open comments and adding comments </p>
-                            :
-                            <p> Close comments </p>
-                        }
+                        <p>
+                            {commentsInfo.show < 0
+                                ? 'Open ' + commentsInfo.count + ' comments and adding comments'
+                                : 'Close comments'
+                            }
+                        </p>
                     </div>
 
 
-                {(showComments > 0) && <Comments articleId={articleId} commentsCount={commentsCount} /> }
+                {(commentsInfo.show > 0) &&
+                    <Comments
+                        articleId={articleId}
+                        commentsCount={commentsCount}
+                        changeSize={changeSize}
+                /> }
 
             </div>
         </>
