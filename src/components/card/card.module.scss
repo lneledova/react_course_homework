@@ -7,7 +7,7 @@
 
     margin: 2% 20%;
 
-    & h2 {
+    & > h2 {
         color: $darkBlueColor;
         text-decoration: underline solid $darkBlueColor;
     }
@@ -93,37 +93,37 @@
     }
 }
 
-@media (max-width: 991px) {
+@media (max-width: $smallScreenMaxWidth) {
     .card {
         @include font-settings($simpleTextSizeSmall, normal);
 
-        & h2 {
+        & > h2 {
             @include font-settings($bigTextSizeSmall, bold);
         }
     }
 }
 
-@media (min-width: 991px) and (max-width: 1199px) {
+@media (max-width: $mediumScreenMaxWidth) {
     .card {
         @include font-settings($simpleTextSizeMedium, normal);
 
-        & h2 {
+        & > h2 {
             @include font-settings($bigTextSizeMedium, bold);
         }
     }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: $largeScreenMinWidth) {
     .card {
         @include font-settings($simpleTextSizeLarge, normal);
 
-        & h2 {
+        & > h2 {
             @include font-settings($bigTextSizeLarge, bold);
         }
     }
 }
 
-@media (max-width: 991px) {
+@media (max-width: $smallScreenMaxWidth) {
     .heart {
         width: 30px;
         height: 27px;
@@ -145,7 +145,7 @@
     }
 }
 
-@media (max-width: 860px) {
+@media (max-width: $superSmallScreenMaxWidth) {
     .openButton {
         margin-right: 10%;
         margin-left: 10%;

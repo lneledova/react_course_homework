@@ -110,9 +110,9 @@
     }
 }
 
-@media (max-width: 991px) {
+@media (max-width: $smallScreenMaxWidth) {
     .noComments .comments {
-        & h3 {
+        & > h3 {
             @include font-settings($simpleTextSizeSmall, bold);
         }
     }
@@ -146,9 +146,9 @@
     }
 }
 
-@media (min-width: 991px) and (max-width: 1199px) {
+@media (max-width: $mediumScreenMaxWidth) {
     .noComments .comments {
-        & h3 {
+        & > h3 {
             @include font-settings($simpleTextSizeMedium, bold);
         }
     }
@@ -182,9 +182,9 @@
     }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: $largeScreenMinWidth) {
     .noComments .comments {
-        & h3 {
+        & > h3 {
             @include font-settings($simpleTextSizeLarge, bold);
         }
     }

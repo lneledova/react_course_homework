@@ -60,12 +60,21 @@ export function Comments({articleId, commentsCount, changeSize}) {
         )
     }
 
+    const commentSizeText = () => {
+        if (commentsSize === 0) {
+            return "There is no comment"
+        }
+        if (commentsSize === 1) {
+            return "There is 1 comment"
+        }
+        return "There are " +  commentsSize + " comments"
+    }
+
 
     return (
         <>
             <div className={s.comments}>
-                <h3>There {commentsSize === 0 ? "is no comment" :
-                    commentsSize === 1 ? "is " + commentsSize + " comment" : "are " + commentsSize + " comments"}</h3>
+                <h3> {commentSizeText()} </h3>
                 { comments ?
                     comments.map(item => <div className={s.comment}>
                         <div className={s.author}> {item.author} </div>
