@@ -5,7 +5,7 @@ import s from './comments.module.css'
 
 import {getComments} from '../../loaders_data/get-comments-by-article.js'
 
-export function Comments({articleId, commentsCount}) {
+export function Comments({articleId, commentsCount, changeSize}) {
     const [comments, setComments] = useState(null)
     const [commentsSize, setCommentsSize] = useState(commentsCount)
     const [comment, setComment] = useState({
@@ -28,6 +28,7 @@ export function Comments({articleId, commentsCount}) {
     const deleteComment = (delete_id) => {
         setComments([...comments.filter(({commentId}) => commentId !== delete_id)])
         setCommentsSize(commentsSize - 1)
+        changeSize(-1)
     }
 
     const addComment = () => {
@@ -38,6 +39,7 @@ export function Comments({articleId, commentsCount}) {
         const newComment = {...comment}
         setComments([...comments, newComment])
         setCommentsSize(commentsSize + 1)
+        changeSize(1)
     }
 
     const setAuthor = event => {
