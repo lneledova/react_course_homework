@@ -3,12 +3,12 @@ import classnames from 'classnames/bind'
 
 // Imports CSS module as JS object
 import s from './comment.module.scss'
-import EditImg from '../../img/edit_img_red.png';
+import EditImg from '../../common/img/edit_img_red.png';
 
 
 const cx = classnames.bind(s);
 
-export function Comment({author, text, currentLikes, createdAt}) {
+export function Comment({commentId, author, text, currentLikes, createdAt, changeCurrentLikes}) {
 
     const [like, setLike] = useState({
         counter: currentLikes,
@@ -26,6 +26,7 @@ export function Comment({author, text, currentLikes, createdAt}) {
 
 
     const likeDislike = () => {
+        changeCurrentLikes(commentId, like.isLike)
         setLike(oldLike => ({
             counter: oldLike.counter + oldLike.isLike,
             isLike: oldLike.isLike * (-1),
@@ -66,15 +67,17 @@ export function Comment({author, text, currentLikes, createdAt}) {
                     <div className={s.author}> {author} </div>
                     <div className={s.date}> {createdAt} </div>
                 </div>
-                {comment.isEditing ?
+                {comment.isEditing
+                    ?
                     <textarea className={s.commentInput} placeholder={comment.newText}  value={comment.newText} onChange={setNewText} />
-                :
+                    :
                     <div className={s.commentText}> {comment.text} </div>
                 }
                 <div className={s.likesHeart}>
                     <div className={s.likes}>{like.counter}</div>
                     <div className={cx('heart', `heart-color-${like.color}`)} onClick={likeDislike}></div>
-                    {comment.isEditing ?
+                    {comment.isEditing
+                        ?
                         <div className={s.saveEditing} onClick={endEdit}> save </div>
                         :
                         <img src={EditImg} onClick={startEdit}/>}

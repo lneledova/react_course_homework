@@ -5,7 +5,7 @@ import classnames from 'classnames/bind'
 import s from './card.module.scss'
 
 import {Comments} from "../comments/comments";
-import EditImg from '../../img/edit_img_violet.png';
+import EditImg from '../../common/img/edit_img_violet.png';
 
 const cx = classnames.bind(s);
 
@@ -95,18 +95,20 @@ export function Card({articleId, title, text, currentLikes, commentsCount, creat
         <>
             <div className={s.card}>
                 <div className={s.date}>{article.createdAt}</div>
-                {article.isEditing ?
+                {article.isEditing
+                    ?
                     <>
                         <input className={s.titleInput} type="text" value={article.newTitle} onChange={setNewTitle} placeholder={article.newTitle} />
                         <textarea className={s.textInput} placeholder={article.newText} value={article.newText} onChange={setNewText} />
                     </>
-                :
+                    :
                     <>
                         <h2>{article.title}</h2>
                         <h3>{article.text}</h3>
                     </>
                 }
-                {article.isEditing ?
+                {article.isEditing
+                    ?
                     <div className={s.saveEditing} onClick={endEdit}> save </div>
                     :
                     <img src={EditImg} onClick={startEdit}/>
@@ -120,8 +122,10 @@ export function Card({articleId, title, text, currentLikes, commentsCount, creat
                     <div className={s.openButton} onClick={openComments}>
                         <p>
                             {commentsInfo.show < 0
-                                ? 'Open ' + commentsInfo.count + ' comments and adding comments'
-                                : 'Close comments'
+                                ?
+                                'Open ' + commentsInfo.count + ' comments and adding comments'
+                                :
+                                'Close comments'
                             }
                         </p>
                     </div>

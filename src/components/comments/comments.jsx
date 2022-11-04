@@ -1,10 +1,15 @@
 import React, {useEffect, useState} from 'react'
+import {sortByDateDec} from '../../common/helpers/sort-by-date.js'
+import {sortByDateInc} from '../../common/helpers/sort-by-date.js'
+
+import {sortByLikesDec} from '../../common/helpers/sort-by-likes.js'
+import {sortByLikesInc} from '../../common/helpers/sort-by-likes.js'
 
 // Imports CSS module as JS object
 import s from './comments.module.scss'
 
 import {Comment} from "../comment/comment";
-import {getComments} from '../../loaders_data/get-comments-by-article.js'
+import {getComments} from '../../common/loaders_data/get-comments-by-article.js'
 
 export function Comments({articleId, commentsCount, changeSize}) {
     const [comments, setComments] = useState(null)
@@ -71,31 +76,23 @@ export function Comments({articleId, commentsCount, changeSize}) {
         )
     }
 
-    const sortDateIncCards = () => {
-        comments.sort((o1, o2) => {
-            return new Date(o1.createdAt) -  new Date(o2.createdAt)
-        })
+    const sortDateIncComments = () => {
+        sortByDateInc(comments)
         setSorted(sorted + 1)
     }
 
-    const sortDateDecCards = () => {
-        comments.sort((o1, o2) => {
-            return new Date(o2.createdAt) -  new Date(o1.createdAt)
-        })
+    const sortDateDecComments = () => {
+        sortByDateDec(comments)
         setSorted(sorted + 1)
     }
 
-    const sortLikeIncCards = () => {
-        comments.sort((o1, o2) => {
-            return new Date(o1.currentLikes) -  new Date(o2.currentLikes)
-        })
+    const sortLikeIncComments = () => {
+        sortByLikesInc(comments)
         setSorted(sorted + 1)
     }
 
-    const sortLikeDecCards = () => {
-        comments.sort((o1, o2) => {
-            return new Date(o2.currentLikes) -  new Date(o1.currentLikes)
-        })
+    const sortLikeDecComments = () => {
+        sortByLikesDec(comments)
         setSorted(sorted + 1)
     }
 
@@ -109,26 +106,33 @@ export function Comments({articleId, commentsCount, changeSize}) {
         return "There are " +  commentsSize + " comments"
     }
 
+    const changeCurrentLikes = (changeId, value) => {
+        comments
+            .filter(it => it.commentId === changeId)
+            .map(it => it.currentLikes += value)
+    }
+
 
     return (
         <>
             <div className={s.comments}>
                 <h3> {commentSizeText()} </h3>
-                { comments ?
+                { comments
+                    ?
                     <>
                         <h3>
                             <p>Select sorting method for comments:</p>
                             <div>
-                                <input type="radio" onChange={sortDateIncCards} name="sort" />
+                                <input type="radio" onChange={sortDateIncComments} name="sort" />
                                 <label>By date increasing</label>
 
-                                <input type="radio" onChange={sortDateDecCards} name="sort"/>
+                                <input type="radio" onChange={sortDateDecComments} name="sort"/>
                                 <label>By date decreasing</label>
                                 <br></br>
-                                <input type="radio" onChange={sortLikeIncCards} name="sort"/>
+                                <input type="radio" onChange={sortLikeIncComments} name="sort"/>
                                 <label>By likes increasing</label>
 
-                                <input type="radio" onChange={sortLikeDecCards} name="sort"/>
+                                <input type="radio" onChange={sortLikeDecComments} name="sort"/>
                                 <label>By likes decreasing</label>
                             </div>
                         </h3>
@@ -136,10 +140,12 @@ export function Comments({articleId, commentsCount, changeSize}) {
                     {comments.map(item =>
                     <div key={item.commentId}>
                         <Comment
+                            commentId={item.commentId}
                             author={item.author}
                             text={item.text}
                             currentLikes={item.currentLikes}
                             createdAt={item.createdAt}
+                            changeCurrentLikes={changeCurrentLikes}
                         />
                         <div className={s.deleteComment} onClick={() => deleteComment(item.commentId)}> delete </div>
                     </div>

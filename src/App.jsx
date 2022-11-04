@@ -2,7 +2,13 @@ import React, {useState, useEffect} from 'react'
 
 import s from './App.module.scss';
 
-import {getArticles} from './loaders_data/get-articles.js'
+import {getArticles} from './common/loaders_data/get-articles.js'
+
+import {sortByDateDec} from './common/helpers/sort-by-date.js'
+import {sortByDateInc} from './common/helpers/sort-by-date.js'
+
+import {sortByLikesDec} from './common/helpers/sort-by-likes.js'
+import {sortByLikesInc} from './common/helpers/sort-by-likes.js'
 
 import {Card} from "./components/card/card";
 
@@ -56,30 +62,22 @@ export function App() {
     }
 
     const sortDateIncCards = () => {
-        articles.sort((o1, o2) => {
-            return new Date(o1.createdAt) -  new Date(o2.createdAt)
-        })
+        sortByDateInc(articles)
         setSorted(sorted + 1)
     }
 
     const sortDateDecCards = () => {
-        articles.sort((o1, o2) => {
-            return new Date(o2.createdAt) -  new Date(o1.createdAt)
-        })
+        sortByDateDec(articles)
         setSorted(sorted + 1)
     }
 
     const sortLikeIncCards = () => {
-        articles.sort((o1, o2) => {
-            return new Date(o1.currentLikes) -  new Date(o2.currentLikes)
-        })
+        sortByLikesInc(articles)
         setSorted(sorted + 1)
     }
 
     const sortLikeDecCards = () => {
-        articles.sort((o1, o2) => {
-            return new Date(o2.currentLikes) -  new Date(o1.currentLikes)
-        })
+        sortByLikesDec(articles)
         setSorted(sorted + 1)
     }
 
@@ -87,7 +85,8 @@ export function App() {
 
     return (
         <>
-            {articles ?
+            {articles
+                ?
                 <div className={s.App}>
 
                     <h2>Select sorting method for cards:</h2>

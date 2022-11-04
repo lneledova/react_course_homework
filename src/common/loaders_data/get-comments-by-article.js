@@ -1,4 +1,4 @@
-import comments from '../assets/comments.json'
+import comments from '../../assets/comments.json'
 
 const COMMENTS_LOAD_DURATION = 1000;
 
