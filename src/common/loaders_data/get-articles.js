@@ -1,4 +1,4 @@
-import articles from '../assets/articles.json'
+import articles from '../../assets/articles.json'
 
 const ARTICLES_LOAD_DURATION = 1500;
 

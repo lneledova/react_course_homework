@@ -1,5 +1,5 @@
-@import "../../styles/mixins.module.scss";
-@import "../../styles/vars.module.scss";
+@import "../../common/styles/mixins.module.scss";
+@import "../../common/styles/vars.module.scss";
 
 .comment {
   @include borders-and-background-color($darkRedColor, $smallBorderRadius, $orangeCommentCardColor);
@@ -8,7 +8,7 @@
   margin-bottom: 1%;
   margin-top: 1%;
 
-  & img {
+  &  img {
     margin-left: 50%;
     width: 45px;
   }
@@ -134,7 +134,7 @@
 }
 
 
-@media (max-width: 991px) {
+@media (max-width: $smallScreenMaxWidth) {
   .author, .date {
     @include font-settings($simpleTextSizeSmall, bold);
   }
@@ -178,7 +178,7 @@
   }
 }
 
-@media (min-width: 991px) and (max-width: 1199px) {
+@media (max-width: $mediumScreenMaxWidth) {
   .author, .date {
     @include font-settings($simpleTextSizeMedium, bold);
   }
@@ -196,7 +196,7 @@
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: $largeScreenMinWidth) {
 
   .author, .date {
     @include font-settings($simpleTextSizeMedium, bold);
