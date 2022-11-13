@@ -1,6 +1,5 @@
 import { initialState } from '../../model/initialState'
 import { ActionTypes } from '../../constants'
-import comments from "../../../../components/comments/comments";
 
 export const commentsReducer = (state = initialState(), action) => {
     switch (action.type) {
@@ -10,8 +9,9 @@ export const commentsReducer = (state = initialState(), action) => {
             if (!targetArticle || targetArticle.length > 1) {
                 return state
             }
-            console.log("comments")
+            console.log("comments in store")
             console.log(state.comments)
+
             return {
                 articles: [
                     ...state.articles.filter(({articleId}) => articleId.toString() !== id),
