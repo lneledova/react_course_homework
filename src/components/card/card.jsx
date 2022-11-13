@@ -11,23 +11,22 @@ import EditImg from '../../common/img/edit_img_violet.png';
 
 const cx = classnames.bind(s);
 
-function useArticleId() {
-    const { articleId } = useParams()
-    return articleId
+function extractArticleId() {
+    return window.location.href.split('/').pop()
 }
 
 
 const mapStateToProps = (state) => ({
-    title: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === useArticleId())[0].title,
-    text: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === useArticleId())[0].text,
-    currentLikes: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === useArticleId())[0].currentLikes,
-    commentsCount: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === useArticleId())[0].commentsCount,
-    createdAt: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === useArticleId())[0].createdAt,
+    title: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === extractArticleId())[0].title,
+    text: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === extractArticleId())[0].text,
+    currentLikes: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === extractArticleId())[0].currentLikes,
+    commentsCount: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === extractArticleId())[0].commentsCount,
+    createdAt: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === extractArticleId())[0].createdAt,
 })
 
 function Card({title, text, currentLikes, commentsCount, createdAt}) {
 
-    const { articleId } = useArticleId()
+    const { articleId } = useParams()
 
     const [like, setLike] = useState({
         counter: currentLikes,

@@ -16,16 +16,13 @@ import {actionEditComment} from "../../common/store/actions/editComment";
 import {actionDeleteComment} from "../../common/store/actions/deleteComment";
 import {actionAddComment} from "../../common/store/actions/addComment";
 
-function useArticleId() {
-    const { articleId } = useParams()
-    return articleId
+function extractArticleId() {
+    return window.location.href.split('/').pop()
 }
-
 
 const mapStateToProps = (state) => ({
     commentsCount: state.articlesReducer.articles.filter(({articleId}) => {
-        console.log("map state to props")
-        return articleId.toString() === useArticleId()
+        return articleId.toString() === extractArticleId()
     })[0].commentsCount,
     commentsStore: state.commentsReducer.comments,
 })
@@ -40,35 +37,21 @@ function Comments({commentsCount, commentsStore, changeComment, addComment, dele
     const { articleId } = useParams()
     //const [comments, setComments] = useState(commentsP)
     const [sorted, setSorted] = useState(0)
-    const [commentsSize, setCommentsSize] = useState(commentsCount)
+    // const [commentsSize, setCommentsSize] = useState(commentsCount)
     const [comment, setComment] = useState({
-            commentId: 10,
-            author: "",
-            text: "",
-            articleId: articleId,
-            createdAt: "",
-            currentLikes: 0
-        }
-    )
-    //const [comments, setComments] = useState(commentsStore)
-    console.log("comments store:")
+        commentId: 10,
+        author: "",
+        text: "",
+        articleId: articleId,
+        createdAt: "",
+        currentLikes: 0
+    })
+
+    console.log("comments in component:")
     console.log(commentsStore)
-    console.log(commentsCount)
-    console.log("g")
-
-
-
-    // useEffect(() => {
-    //     getComments(articleId).then(fetchedComments => {
-    //         setComments(fetchedComments)
-    //         setCommentsSize(commentsCount)
-    //     })
-    // }, [])
-
 
     const deleteCommentHandler = (delete_id) => {
         deleteComment(delete_id)
-        //setComments(commentsStore)
     }
 
     const addCommentHandler = () => {
@@ -79,8 +62,6 @@ function Comments({commentsCount, commentsStore, changeComment, addComment, dele
             createdAt: currDate
         }
         addComment(newComment)
-        setCommentsSize(commentsSize + 1)
-        //setComments(commentsStore)
         setComment( {
             ...comment,
             createdAt: currDate,
@@ -88,23 +69,15 @@ function Comments({commentsCount, commentsStore, changeComment, addComment, dele
         })
     }
 
-    const setAuthor = event => {
-        const { value } = event.target
-        setComment({
-                ...comment,
-                author: value
-            }
-        )
-    }
+    const setAuthor = event => setComment({
+        ...comment,
+        author: event.target.value
+    })
 
-    const setText = event => {
-        const { value } = event.target
-        setComment({
-                ...comment,
-                text: value
-            }
-        )
-    }
+    const setText = event => setComment({
+        ...comment,
+        text: event.target.value
+    })
 
     const sortDateIncComments = () => {
         sortByDateInc(commentsStore)
@@ -127,13 +100,13 @@ function Comments({commentsCount, commentsStore, changeComment, addComment, dele
     }
 
     const commentSizeText = () => {
-        if (commentsSize === 0) {
+        if (commentsCount === 0) {
             return "There is no comment"
         }
-        if (commentsSize === 1) {
+        if (commentsCount === 1) {
             return "There is 1 comment"
         }
-        return "There are " +  commentsSize + " comments"
+        return "There are " +  commentsCount + " comments"
     }
 
     const changeCurrentLikes = (changeId, value) => {
