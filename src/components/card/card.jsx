@@ -1,15 +1,33 @@
 import React, {useState} from 'react'
 import classnames from 'classnames/bind'
+import {useParams} from "react-router";
+import {connect} from "react-redux";
 
 // Imports CSS module as JS object
 import s from './card.module.scss'
 
-import {Comments} from "../comments/comments";
+import Comments from "../comments/comments";
 import EditImg from '../../common/img/edit_img_violet.png';
 
 const cx = classnames.bind(s);
 
-export function Card({articleId, title, text, currentLikes, commentsCount, createdAt}) {
+function useArticleId() {
+    const { articleId } = useParams()
+    return articleId
+}
+
+
+const mapStateToProps = (state) => ({
+    title: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === useArticleId())[0].title,
+    text: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === useArticleId())[0].text,
+    currentLikes: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === useArticleId())[0].currentLikes,
+    commentsCount: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === useArticleId())[0].commentsCount,
+    createdAt: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === useArticleId())[0].createdAt,
+})
+
+function Card({title, text, currentLikes, commentsCount, createdAt}) {
+
+    const { articleId } = useArticleId()
 
     const [like, setLike] = useState({
         counter: currentLikes,
@@ -131,15 +149,12 @@ export function Card({articleId, title, text, currentLikes, commentsCount, creat
                     </div>
 
 
-                {(commentsInfo.show > 0) &&
-                    <Comments
-                        articleId={articleId}
-                        commentsCount={commentsCount}
-                        changeSize={changeSize}
-                /> }
+                {(commentsInfo.show > 0) && <Comments/> }
 
             </div>
         </>
     )
 
 }
+
+export default connect(mapStateToProps)(Card)
