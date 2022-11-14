@@ -8,50 +8,57 @@ import s from './card.module.scss'
 
 import Comments from "../comments/comments";
 import EditImg from '../../common/img/edit_img_violet.png';
+import {getArticleById} from "../../common/helpers/get-article-by-id";
+import {actionEditArticle} from "../../common/store/actions/editArticle";
+import {Link} from "react-router-dom";
 
 const cx = classnames.bind(s);
 
-function extractArticleId() {
-    return window.location.href.split('/').pop()
-}
-
-
 const mapStateToProps = (state) => ({
-    title: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === extractArticleId())[0].title,
-    text: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === extractArticleId())[0].text,
-    currentLikes: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === extractArticleId())[0].currentLikes,
-    commentsCount: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === extractArticleId())[0].commentsCount,
-    createdAt: state.articlesReducer.articles.filter(({articleId}) => articleId.toString() === extractArticleId())[0].createdAt,
+    articles: state.articlesReducer.articles,
 })
 
-function Card({title, text, currentLikes, commentsCount, createdAt}) {
+const mapDispatchToProps = (dispatch) => ({
+    editArticle: (newArticle) => dispatch(actionEditArticle(newArticle)),
+})
+
+function Card({articles, editArticle}) {
 
     const { articleId } = useParams()
 
+    //const {title, text, currentLikes, commentsCount, createdAt} = getArticleById(articles, articleId)
+    const [article, setArticle] = useState(getArticleById(articles, articleId))
+
     const [like, setLike] = useState({
-        counter: currentLikes,
         isLike: 1,
         color: 'gray'
     })
 
     const [commentsInfo, setCommentsInfo] = useState({
         show: -1,
-        count: commentsCount
+        count: article.commentsCount
     })
 
-    const [article, setArticle] = useState({
-        title: title,
-        newTitle: title,
-        text: text,
-        newText: text,
+    const [updateArticle, setUpdateArticle] = useState({
+        title: article.title,
+        newTitle: article.title,
+        text: article.text,
+        newText: article.text,
         isEditing: false,
-        createdAt: createdAt
+        createdAt: article.createdAt
     })
 
 
     const likeDislike = () => {
+        const newArticle = {
+            ...article,
+            currentLikes: article.currentLikes + like.isLike,
+        }
+
+        editArticle(newArticle)
+
+        setArticle(newArticle)
         setLike(oldLike => ({
-            counter: oldLike.counter + oldLike.isLike,
             isLike: oldLike.isLike * (-1),
             color: oldLike.isLike === 1 ? 'red' : 'gray'
         }))
@@ -60,30 +67,22 @@ function Card({title, text, currentLikes, commentsCount, createdAt}) {
     const openComments = () => {
         setCommentsInfo(oldCommentsInfo => ({
             show: (-1) * oldCommentsInfo.show,
-            count: commentsCount
+            count: article.commentsCount
         }))
     }
 
-    const changeSize = (value) => {
-        setCommentsInfo({
-                show: commentsInfo.show,
-                count: commentsInfo.count + value
-            }
-        )
-    }
-
     const startEdit = () => {
-        setArticle({
-            ...article,
+        setUpdateArticle({
+            ...updateArticle,
             isEditing: true,
-            newText: article.text
+            newText: updateArticle.text
         })
     }
 
     const setNewText = event => {
         const { value } = event.target
-        setArticle( {
-                ...article,
+        setUpdateArticle( {
+                ...updateArticle,
                 newText: value
             }
         )
@@ -91,47 +90,60 @@ function Card({title, text, currentLikes, commentsCount, createdAt}) {
 
     const setNewTitle = event => {
         const { value } = event.target
-        setArticle( {
-                ...article,
+        setUpdateArticle( {
+                ...updateArticle,
                 newTitle: value
             }
         )
     }
 
     const endEdit = () => {
-        setArticle({
-            ...article,
+        setUpdateArticle({
+            ...updateArticle,
             isEditing: false,
-            text: article.newText,
-            title: article.newTitle
+            text: updateArticle.newText,
+            title: updateArticle.newTitle
         })
+        const newArticle = {
+            ...article,
+            text: updateArticle.newText,
+            title: updateArticle.newTitle
+        }
+
+        editArticle(newArticle)
+
+        setArticle(newArticle)
+
     }
 
 
     return (
         <>
+            <Link className={s.backLink} to='/articles'>
+                <h2> Articles </h2>
+            </Link>
             <div className={s.card}>
-                <div className={s.date}>{article.createdAt}</div>
-                {article.isEditing
+                <div className={s.date}>{updateArticle.createdAt}</div>
+                {updateArticle.isEditing
                     ?
                     <>
-                        <input className={s.titleInput} type="text" value={article.newTitle} onChange={setNewTitle} placeholder={article.newTitle} />
-                        <textarea className={s.textInput} placeholder={article.newText} value={article.newText} onChange={setNewText} />
+                        <input className={s.titleInput} type="text" value={updateArticle.newTitle} onChange={setNewTitle} placeholder={updateArticle.newTitle} />
+                        <textarea className={s.textInput} placeholder={updateArticle.newText} value={updateArticle.newText} onChange={setNewText} />
                     </>
                     :
                     <>
-                        <h2>{article.title}</h2>
-                        <h3>{article.text}</h3>
+                        <h2>{updateArticle.title}</h2>
+                        <h3>{updateArticle.text}</h3>
                     </>
                 }
-                {article.isEditing
+                {updateArticle.isEditing
                     ?
                     <div className={s.saveEditing} onClick={endEdit}> save </div>
                     :
                     <img src={EditImg} onClick={startEdit}/>
                 }
                 <div className={s.likesHeart}>
-                    <div className={s.likes}>{like.counter}</div>
+                    <div className={s.likes}>{article.currentLikes}</div>
                     <div className={cx('heart', `heart-color-${like.color}`)} onClick={likeDislike}></div>
                 </div>
 
@@ -156,4 +168,4 @@ function Card({title, text, currentLikes, commentsCount, createdAt}) {
 
 }
 
-export default connect(mapStateToProps)(Card)
+export default connect(mapStateToProps, mapDispatchToProps)(Card)

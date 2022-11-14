@@ -3,10 +3,11 @@ import classnames from 'classnames/bind'
 
 // Imports CSS module as JS object
 import s from './smallCard.module.scss'
+import {Link} from "react-router-dom";
 
 const cx = classnames.bind(s);
 
-export function SmallCard({articleId, title, text, currentLikes, commentsCount, createdAt}) {
+export function SmallCard({articleId, title, text, currentLikes, createdAt}) {
 
     const [like, setLike] = useState({
         counter: currentLikes,
@@ -32,8 +33,10 @@ export function SmallCard({articleId, title, text, currentLikes, commentsCount, 
         <>
             <div className={s.card}>
                 <div className={s.date}>{createdAt}</div>
+                <Link  to={`${articleId}`} key={articleId}>
+                    <h2>{title}</h2>
+                </Link>
                     <>
-                        <h2>{title}</h2>
                         <h3>{article.text}</h3>
                     </>
                 <div className={s.likesHeart}>

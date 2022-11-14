@@ -2,8 +2,8 @@ import comments from '../../assets/comments.json'
 
 const COMMENTS_LOAD_DURATION = 1000;
 
-function selectByArticleId(totalData, id) {
-    return totalData.filter(({articleId}) => articleId === id)
+export function selectByArticleId(totalData, id) {
+    return totalData.filter(({articleId}) => articleId.toString() === id)
 }
 
 export async function getComments(articleId) {

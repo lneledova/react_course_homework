@@ -1,49 +1,48 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 
 import s from './cards.module.scss';
 
-import {getArticles} from '../../common/loaders_data/get-articles.js'
 
-import {sortByDateDec} from '../../common/helpers/sort-by-date.js'
-import {sortByDateInc} from '../../common/helpers/sort-by-date.js'
-
-import {sortByLikesDec} from '../../common/helpers/sort-by-likes.js'
-import {sortByLikesInc} from '../../common/helpers/sort-by-likes.js'
-
-import Card from "../card/card";
 import {SmallCard} from "../small_card/smallCard";
+import {actionAddArticle} from "../../common/store/actions/addArticle";
+import {connect} from "react-redux";
+import {actionSortArticlesDecDate} from "../../common/store/actions/sortArticlesDecDate";
+import {actionSortArticlesAscDate} from "../../common/store/actions/sortArticlesAscDate";
+import {actionSortArticlesDecLike} from "../../common/store/actions/sortArticlesDecLike";
+import {actionSortArticlesAscLike} from "../../common/store/actions/sortArticlesAscLike";
 
 
-export function Cards() {
-    const [articles, setArticles] = useState(null)
+const mapDispatchToProps = (dispatch) => ({
+    addArticle: (newArticle) => dispatch(actionAddArticle(newArticle)),
+    sortArticlesDecDate: () => dispatch(actionSortArticlesDecDate()),
+    sortArticlesAscDate: () => dispatch(actionSortArticlesAscDate()),
+    sortArticlesDecLike: () => dispatch(actionSortArticlesDecLike()),
+    sortArticlesAscLike: () => dispatch(actionSortArticlesAscLike())
+})
+
+const mapStateToProps = (state) => ({
+    articles: state.articlesReducer.articles
+})
+
+function Cards({
+                   articles,
+                   addArticle,
+                   sortArticlesDecDate,
+                   sortArticlesAscDate,
+                   sortArticlesDecLike,
+                   sortArticlesAscLike,
+}) {
     const [sorted, setSorted] = useState(0)
     const [article, setArticle] = useState({
             articleId: 100,
             title: null,
             text: null,
             currentLikes: 0,
-            commentsCount: 0
+            commentsCount: 0,
+            createdAt: "",
         }
     )
 
-    useEffect(() => {
-        getArticles().then(fetchedArticles => setArticles(fetchedArticles))
-    }, [])
-
-    const addArticle = () => {
-        const date = new Date()
-        const currDate = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay()
-        setArticle({
-            ...article,
-            createdAt: currDate,
-            articleId: article.articleId + 1
-        })
-        const newArticle = {
-            ...article,
-            createdAt: currDate
-        }
-        setArticles([...articles, newArticle])
-    }
 
     const addArticleHandler = () => {
         const date = new Date()
@@ -57,7 +56,7 @@ export function Cards() {
             ...article,
             createdAt: currDate
         }
-        setArticles([...articles, newArticle])
+        addArticle(newArticle)
     }
 
     const setTitle = event => {
@@ -79,22 +78,22 @@ export function Cards() {
     }
 
     const sortDateIncCards = () => {
-        sortByDateInc(articles)
+        sortArticlesAscDate()
         setSorted(sorted + 1)
     }
 
     const sortDateDecCards = () => {
-        sortByDateDec(articles)
+        sortArticlesDecDate()
         setSorted(sorted + 1)
     }
 
     const sortLikeIncCards = () => {
-        sortByLikesInc(articles)
+        sortArticlesAscLike()
         setSorted(sorted + 1)
     }
 
     const sortLikeDecCards = () => {
-        sortByLikesDec(articles)
+        sortArticlesDecLike()
         setSorted(sorted + 1)
     }
 
@@ -131,7 +130,6 @@ export function Cards() {
                                         title={item.title}
                                         text={item.text}
                                         currentLikes={item.currentLikes}
-                                        commentsCount={item.commentsCount}
                                         createdAt={item.createdAt}
                                     />
                                 </div>)}
@@ -150,10 +148,10 @@ export function Cards() {
                            placeholder="Your title"/>
                     <textarea className={s.textInput} placeholder="Your text of article" value={article.text}
                               onChange={setText}/>
-                    <div className={s.addButton} onClick={addArticle}>Add</div>
+                    <div className={s.addButton} onClick={addArticleHandler}>Add</div>
                 </div>
             </>
     );
 }
 
-export default Cards;
+export default connect(mapStateToProps, mapDispatchToProps)(Cards)
