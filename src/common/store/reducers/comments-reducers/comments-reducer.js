@@ -1,5 +1,7 @@
 import { initialState } from '../../model/initialState'
 import { ActionTypes } from '../../constants'
+import {sortByDateDec, sortByDateInc} from "../../../helpers/sort-by-date";
+import {sortByLikesDec, sortByLikesInc} from "../../../helpers/sort-by-likes";
 
 export const commentsReducer = (state = initialState(), action) => {
     switch (action.type) {
@@ -9,33 +11,63 @@ export const commentsReducer = (state = initialState(), action) => {
             if (!targetArticle || targetArticle.length > 1) {
                 return state
             }
-            console.log("comments in store")
-            console.log(state.comments)
 
             return {
-                articles: [
-                    ...state.articles.filter(({articleId}) => articleId.toString() !== id),
-                    {
-                        ...targetArticle[0],
-                        commentsCount: targetArticle[0].commentsCount + 1,
-                    },
-                ],
+                ...state,
                 comments: [...state.comments, action.payload],
             }
         }
         case ActionTypes.editComment: {
             const id = action.payload.commentId
-            state.comments.filter(({commentId}) => commentId.toString() === id)[0] = {
-                ...action.payload
+            const targetComment = state.comments.filter(({commentId}) => commentId === id)
+            if (!targetComment || targetComment.length > 1) {
+                return state
             }
-            return state
+            return {
+                ...state,
+                comments: [
+                    ...state.comments.filter(({commentId}) => commentId !== id),
+                    {
+                        ...action.payload
+                    }
+                ]
+            }
         }
         case ActionTypes.deleteComment: {
             const id = action.payload
-            state.articles.filter(({articleId}) => articleId.toString() === id)[0].commentsCount -= 1;
+            const targetComment = state.comments.filter(({commentId}) => commentId === id)
+            if (!targetComment || targetComment.length > 1) {
+                return state
+            }
+            console.log("comments in store")
+            console.log(state.comments)
             return {
                 ...state,
-                comments: [...state.comments.filter(({commentId}) => commentId.toString() !== id)],
+                comments: [...state.comments.filter(({commentId}) => commentId !== id)]
+            }
+        }
+        case ActionTypes.sortCommentsDecDate: {
+            return {
+                ...state,
+                comments: sortByDateDec(state.comments)
+            }
+        }
+        case ActionTypes.sortCommentsAscDate: {
+            return {
+                ...state,
+                comments: sortByDateInc(state.comments)
+            }
+        }
+        case ActionTypes.sortCommentsDecLike: {
+            return {
+                ...state,
+                comments: sortByLikesDec(state.comments)
+            }
+        }
+        case ActionTypes.sortCommentsAscLike: {
+            return {
+                ...state,
+                comments: sortByLikesInc(state.comments)
             }
         }
         default: {

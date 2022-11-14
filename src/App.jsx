@@ -1,8 +1,6 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import {createStore, applyMiddleware} from 'redux'
-import {composeWithDevTools} from 'redux-devtools-extension'
 import {Provider} from 'react-redux'
-import thunk from 'redux-thunk';
 import { Routes, Route, Navigate } from 'react-router-dom'
 
 import s from './App.module.scss';
@@ -19,10 +17,7 @@ const actionFireLogger = ({}) => (next) => (action) => {
     return next(action)
 }
 
-const middlewareEnhancer = applyMiddleware(actionFireLogger)
-const composedEnhancers = composeWithDevTools(middlewareEnhancer)
-
-const store = createStore(rootReducer, composedEnhancers)
+const store = createStore(rootReducer, applyMiddleware(actionFireLogger))
 
 export function App() {
 

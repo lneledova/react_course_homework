@@ -1,43 +1,58 @@
-import React, {useEffect, useState} from 'react'
-import {sortByDateDec} from '../../common/helpers/sort-by-date.js'
-import {sortByDateInc} from '../../common/helpers/sort-by-date.js'
-
-import {sortByLikesDec} from '../../common/helpers/sort-by-likes.js'
-import {sortByLikesInc} from '../../common/helpers/sort-by-likes.js'
+import React, {useState} from 'react'
 
 // Imports CSS module as JS object
 import s from './comments.module.scss'
 
 import {Comment} from "../comment/comment";
-import {getComments} from '../../common/loaders_data/get-comments-by-article.js'
+import {selectByArticleId} from '../../common/loaders_data/get-comments-by-article.js'
 import {useParams} from "react-router";
 import {connect} from "react-redux";
 import {actionEditComment} from "../../common/store/actions/editComment";
 import {actionDeleteComment} from "../../common/store/actions/deleteComment";
 import {actionAddComment} from "../../common/store/actions/addComment";
+import {getCountOfComments} from "../../common/helpers/get-count-of-comments";
+import {actionAddCommentCount} from "../../common/store/actions/addCommentSize";
+import {actionSortCommentsDecDate} from "../../common/store/actions/sortCommentsDecDate";
+import {actionSortCommentsAscDate} from "../../common/store/actions/sortCommentsAscDate";
+import {actionSortCommentsDecLike} from "../../common/store/actions/sortCommentsDecLike";
+import {actionSortCommentsAscLike} from "../../common/store/actions/sortCommentsAscLike";
 
-function extractArticleId() {
-    return window.location.href.split('/').pop()
-}
 
 const mapStateToProps = (state) => ({
-    commentsCount: state.articlesReducer.articles.filter(({articleId}) => {
-        return articleId.toString() === extractArticleId()
-    })[0].commentsCount,
-    commentsStore: state.commentsReducer.comments,
+    articles: state.articlesReducer.articles,
+    comments: state.commentsReducer.comments,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    changeComment: (newComment) => dispatch(actionEditComment(newComment)),
     addComment: (newComment) => dispatch(actionAddComment(newComment)),
     deleteComment: (commentId) => dispatch(actionDeleteComment(commentId)),
+    changeCommentCount: (commentCount, id) => dispatch(actionAddCommentCount(commentCount, id)),
+    editComment: (newComment) => dispatch(actionEditComment(newComment)),
+    sortCommentsDecDate: () => dispatch(actionSortCommentsDecDate()),
+    sortCommentsAscDate: () => dispatch(actionSortCommentsAscDate()),
+    sortCommentsDecLike: () => dispatch(actionSortCommentsDecLike()),
+    sortCommentsAscLike: () => dispatch(actionSortCommentsAscLike())
 })
 
-function Comments({commentsCount, commentsStore, changeComment, addComment, deleteComment}) {
+function Comments({
+                      articles,
+                      comments,
+                      addComment,
+                      deleteComment,
+                      changeCommentCount,
+                      editComment,
+                      sortCommentsDecDate,
+                      sortCommentsAscDate,
+                      sortCommentsDecLike,
+                      sortCommentsAscLike
+}) {
     const { articleId } = useParams()
-    //const [comments, setComments] = useState(commentsP)
+
+    const commentsCount = getCountOfComments(articles, articleId)
+    const commentsStore = selectByArticleId(comments, articleId)
+
+    console.log(articleId)
     const [sorted, setSorted] = useState(0)
-    // const [commentsSize, setCommentsSize] = useState(commentsCount)
     const [comment, setComment] = useState({
         commentId: 10,
         author: "",
@@ -47,11 +62,9 @@ function Comments({commentsCount, commentsStore, changeComment, addComment, dele
         currentLikes: 0
     })
 
-    console.log("comments in component:")
-    console.log(commentsStore)
-
     const deleteCommentHandler = (delete_id) => {
         deleteComment(delete_id)
+        changeCommentCount(commentsCount - 1, articleId)
     }
 
     const addCommentHandler = () => {
@@ -61,7 +74,10 @@ function Comments({commentsCount, commentsStore, changeComment, addComment, dele
             ...comment,
             createdAt: currDate
         }
+
         addComment(newComment)
+        changeCommentCount(commentsCount + 1, articleId)
+
         setComment( {
             ...comment,
             createdAt: currDate,
@@ -80,22 +96,22 @@ function Comments({commentsCount, commentsStore, changeComment, addComment, dele
     })
 
     const sortDateIncComments = () => {
-        sortByDateInc(commentsStore)
+        sortCommentsAscDate()
         setSorted(sorted + 1)
     }
 
     const sortDateDecComments = () => {
-        sortByDateDec(commentsStore)
+        sortCommentsDecDate()
         setSorted(sorted + 1)
     }
 
     const sortLikeIncComments = () => {
-        sortByLikesInc(commentsStore)
+        sortCommentsAscLike()
         setSorted(sorted + 1)
     }
 
     const sortLikeDecComments = () => {
-        sortByLikesDec(commentsStore)
+        sortCommentsDecLike()
         setSorted(sorted + 1)
     }
 
@@ -109,10 +125,8 @@ function Comments({commentsCount, commentsStore, changeComment, addComment, dele
         return "There are " +  commentsCount + " comments"
     }
 
-    const changeCurrentLikes = (changeId, value) => {
-        commentsStore
-            .filter(it => it.commentId === changeId)
-            .map(it => it.currentLikes += value)
+    const changeComment = (newComment) => {
+        editComment(newComment)
     }
 
 
@@ -141,7 +155,6 @@ function Comments({commentsCount, commentsStore, changeComment, addComment, dele
                         </h3>
 
                     {commentsStore
-                        .filter((it) => it.articleId.toString() === articleId)
                         .map(item =>
                     <div key={item.commentId}>
                         <Comment
@@ -150,7 +163,8 @@ function Comments({commentsCount, commentsStore, changeComment, addComment, dele
                             text={item.text}
                             currentLikes={item.currentLikes}
                             createdAt={item.createdAt}
-                            changeCurrentLikes={changeCurrentLikes}
+                            articleId={articleId}
+                            changeComment={changeComment}
                         />
                         <div className={s.deleteComment} onClick={() => deleteCommentHandler(item.commentId)}> delete </div>
                     </div>

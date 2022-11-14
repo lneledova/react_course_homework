@@ -8,15 +8,14 @@ import EditImg from '../../common/img/edit_img_red.png';
 
 const cx = classnames.bind(s);
 
-export function Comment({commentId, author, text, currentLikes, createdAt, changeCurrentLikes}) {
+export function Comment({commentId, author, text, currentLikes, createdAt, articleId,  changeComment}) {
 
     const [like, setLike] = useState({
-        counter: currentLikes,
         isLike: 1,
         color: 'gray'
     })
 
-    const [comment, setComment] = useState({
+    const [updateComment, setUpdateComment] = useState({
             text: text,
             newText: text,
             createdAt: null,
@@ -24,39 +23,65 @@ export function Comment({commentId, author, text, currentLikes, createdAt, chang
         }
     )
 
+    const [comment, setComment] = useState({
+        commentId,
+        articleId,
+        author,
+        text,
+        currentLikes,
+        createdAt,
+    })
+
 
     const likeDislike = () => {
-        changeCurrentLikes(commentId, like.isLike)
+        const newComment = {
+            ...comment,
+            currentLikes: comment.currentLikes + like.isLike
+        }
+
+        changeComment(newComment)
+
         setLike(oldLike => ({
-            counter: oldLike.counter + oldLike.isLike,
             isLike: oldLike.isLike * (-1),
             color: oldLike.isLike === 1 ? 'red' : 'gray'
         }))
+        setComment(newComment)
     }
 
     const startEdit = () => {
-        setComment({
-            ...comment,
+        setUpdateComment({
+            ...updateComment,
             isEditing: true,
-            newText: comment.text
+            newText: updateComment.text
         })
     }
 
     const setNewText = event => {
         const { value } = event.target
-        setComment( {
-                ...comment,
+        setUpdateComment( {
+                ...updateComment,
                 newText: value
             }
         )
     }
 
     const endEdit = () => {
+        setUpdateComment({
+            ...updateComment,
+            isEditing: false,
+            text: updateComment.newText
+        })
         setComment({
             ...comment,
-            isEditing: false,
-            text: comment.newText
+            text: updateComment.newText
         })
+
+        const newComment = {
+            ...comment,
+            text: updateComment.newText
+        }
+
+        changeComment(newComment)
     }
 
 
@@ -67,16 +92,16 @@ export function Comment({commentId, author, text, currentLikes, createdAt, chang
                     <div className={s.author}> {author} </div>
                     <div className={s.date}> {createdAt} </div>
                 </div>
-                {comment.isEditing
+                {updateComment.isEditing
                     ?
-                    <textarea className={s.commentInput} placeholder={comment.newText}  value={comment.newText} onChange={setNewText} />
+                    <textarea className={s.commentInput} placeholder={updateComment.newText}  value={updateComment.newText} onChange={setNewText} />
                     :
-                    <div className={s.commentText}> {comment.text} </div>
+                    <div className={s.commentText}> {updateComment.text} </div>
                 }
                 <div className={s.likesHeart}>
-                    <div className={s.likes}>{like.counter}</div>
+                    <div className={s.likes}>{comment.currentLikes}</div>
                     <div className={cx('heart', `heart-color-${like.color}`)} onClick={likeDislike}></div>
-                    {comment.isEditing
+                    {updateComment.isEditing
                         ?
                         <div className={s.saveEditing} onClick={endEdit}> save </div>
                         :
