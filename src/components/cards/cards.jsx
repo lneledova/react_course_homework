@@ -3,13 +3,13 @@ import React, {useState} from 'react'
 import s from './cards.module.scss';
 
 
-import {SmallCard} from "../small_card/smallCard";
-import {actionAddArticle} from "../../common/store/actions/addArticle";
-import {connect} from "react-redux";
-import {actionSortArticlesDecDate} from "../../common/store/actions/sortArticlesDecDate";
-import {actionSortArticlesAscDate} from "../../common/store/actions/sortArticlesAscDate";
-import {actionSortArticlesDecLike} from "../../common/store/actions/sortArticlesDecLike";
-import {actionSortArticlesAscLike} from "../../common/store/actions/sortArticlesAscLike";
+import {SmallCard} from '../small_card/smallCard';
+import {actionAddArticle} from '../../common/store/actions/addArticle';
+import {connect} from 'react-redux';
+import {actionSortArticlesDecDate} from '../../common/store/actions/sortArticlesDecDate';
+import {actionSortArticlesAscDate} from '../../common/store/actions/sortArticlesAscDate';
+import {actionSortArticlesDecLike} from '../../common/store/actions/sortArticlesDecLike';
+import {actionSortArticlesAscLike} from '../../common/store/actions/sortArticlesAscLike';
 
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,7 +1,7 @@
 import { initialState } from '../../model/initialState'
 import { ActionTypes } from '../../constants'
-import {sortByDateDec, sortByDateInc} from "../../../helpers/sort-by-date";
-import {sortByLikesDec, sortByLikesInc} from "../../../helpers/sort-by-likes";
+import {sortByDateDec, sortByDateInc} from '../../../helpers/sort-by-date';
+import {sortByLikesDec, sortByLikesInc} from '../../../helpers/sort-by-likes';
 
 export const articlesReducer = (state = initialState(), action) => {
     switch (action.type) {

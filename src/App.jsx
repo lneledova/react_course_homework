@@ -1,19 +1,21 @@
 import React from 'react'
-import {createStore, applyMiddleware} from 'redux'
-import {Provider} from 'react-redux'
-import { Routes, Route, Navigate } from 'react-router-dom'
-
-import s from './App.module.scss';
+import { createStore, applyMiddleware } from 'redux'
+import { Provider } from 'react-redux'
+import { Routes, Route } from 'react-router-dom'
 
 
-import {rootReducer} from './common/store/reducers/root-reducer.js'
-import ArticlesPage from "./pages/articles.page";
-import {HomePage} from "./pages/home.page";
-import {NotFoundPage} from "./pages/notFound.page";
-import ArticlePage from "./pages/article.page";
+
+import { rootReducer } from './common/store/reducers/root-reducer.js'
+import { ArticlesPage } from './pages/articles.page';
+import { HomePage } from './pages/home.page';
+import { NotFoundPage } from './pages/notFound.page';
+import { ArticlePage } from './pages/article.page';
 
 const actionFireLogger = ({}) => (next) => (action) => {
-    console.log(`action [${action.type}] was fired with payload: ${JSON.stringify(action.payload)}`)
+    console.group();
+    console.log(`action [${action.type}] was fired with payload:`)
+    console.log(action.payload)
+    console.groupEnd();
     return next(action)
 }
 

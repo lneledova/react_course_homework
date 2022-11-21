@@ -1,16 +1,16 @@
 import React, {useState} from 'react'
 import classnames from 'classnames/bind'
-import {useParams} from "react-router";
-import {connect} from "react-redux";
+import {useParams} from 'react-router';
+import {connect} from 'react-redux';
 
 // Imports CSS module as JS object
 import s from './card.module.scss'
 
-import Comments from "../comments/comments";
+import Comments from '../comments/comments';
 import EditImg from '../../common/img/edit_img_violet.png';
-import {getArticleById} from "../../common/helpers/get-article-by-id";
-import {actionEditArticle} from "../../common/store/actions/editArticle";
-import {Link} from "react-router-dom";
+import {getArticleById} from '../../common/helpers/get-article-by-id';
+import {actionEditArticle} from '../../common/store/actions/editArticle';
+import {Link} from 'react-router-dom';
 
 const cx = classnames.bind(s);
 
@@ -26,7 +26,6 @@ function Card({articles, editArticle}) {
 
     const { articleId } = useParams()
 
-    //const {title, text, currentLikes, commentsCount, createdAt} = getArticleById(articles, articleId)
     const [article, setArticle] = useState(getArticleById(articles, articleId))
 
     const [like, setLike] = useState({
