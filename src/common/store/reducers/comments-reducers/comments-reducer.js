@@ -1,7 +1,7 @@
 import { initialState } from '../../model/initialState'
 import { ActionTypes } from '../../constants'
-import {sortByDateDec, sortByDateInc} from "../../../helpers/sort-by-date";
-import {sortByLikesDec, sortByLikesInc} from "../../../helpers/sort-by-likes";
+import {sortByDateDec, sortByDateInc} from '../../../helpers/sort-by-date';
+import {sortByLikesDec, sortByLikesInc} from '../../../helpers/sort-by-likes';
 
 export const commentsReducer = (state = initialState(), action) => {
     switch (action.type) {
@@ -11,7 +11,6 @@ export const commentsReducer = (state = initialState(), action) => {
             if (!targetArticle || targetArticle.length > 1) {
                 return state
             }
-
             return {
                 ...state,
                 comments: [...state.comments, action.payload],
@@ -39,8 +38,6 @@ export const commentsReducer = (state = initialState(), action) => {
             if (!targetComment || targetComment.length > 1) {
                 return state
             }
-            console.log("comments in store")
-            console.log(state.comments)
             return {
                 ...state,
                 comments: [...state.comments.filter(({commentId}) => commentId !== id)]

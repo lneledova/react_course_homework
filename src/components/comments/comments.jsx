@@ -3,19 +3,19 @@ import React, {useState} from 'react'
 // Imports CSS module as JS object
 import s from './comments.module.scss'
 
-import {Comment} from "../comment/comment";
+import {Comment} from '../comment/comment';
 import {selectByArticleId} from '../../common/loaders_data/get-comments-by-article.js'
-import {useParams} from "react-router";
-import {connect} from "react-redux";
-import {actionEditComment} from "../../common/store/actions/editComment";
-import {actionDeleteComment} from "../../common/store/actions/deleteComment";
-import {actionAddComment} from "../../common/store/actions/addComment";
-import {getCountOfComments} from "../../common/helpers/get-count-of-comments";
-import {actionAddCommentCount} from "../../common/store/actions/addCommentSize";
-import {actionSortCommentsDecDate} from "../../common/store/actions/sortCommentsDecDate";
-import {actionSortCommentsAscDate} from "../../common/store/actions/sortCommentsAscDate";
-import {actionSortCommentsDecLike} from "../../common/store/actions/sortCommentsDecLike";
-import {actionSortCommentsAscLike} from "../../common/store/actions/sortCommentsAscLike";
+import {useParams} from 'react-router';
+import {connect} from 'react-redux';
+import {actionEditComment} from '../../common/store/actions/editComment';
+import {actionDeleteComment} from '../../common/store/actions/deleteComment';
+import {actionAddComment} from '../../common/store/actions/addComment';
+import {getCountOfComments} from '../../common/helpers/get-count-of-comments';
+import {actionAddCommentCount} from '../../common/store/actions/addCommentSize';
+import {actionSortCommentsDecDate} from '../../common/store/actions/sortCommentsDecDate';
+import {actionSortCommentsAscDate} from '../../common/store/actions/sortCommentsAscDate';
+import {actionSortCommentsDecLike} from '../../common/store/actions/sortCommentsDecLike';
+import {actionSortCommentsAscLike} from '../../common/store/actions/sortCommentsAscLike';
 
 
 const mapStateToProps = (state) => ({
@@ -51,7 +51,6 @@ function Comments({
     const commentsCount = getCountOfComments(articles, articleId)
     const commentsStore = selectByArticleId(comments, articleId)
 
-    console.log(articleId)
     const [sorted, setSorted] = useState(0)
     const [comment, setComment] = useState({
         commentId: 10,

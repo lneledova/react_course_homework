@@ -3,7 +3,7 @@ import classnames from 'classnames/bind'
 
 // Imports CSS module as JS object
 import s from './smallCard.module.scss'
-import {Link} from "react-router-dom";
+import {Link} from 'react-router-dom';
 
 const cx = classnames.bind(s);
 
