@@ -1,4 +1,4 @@
-import React, {useCallback, useReducer, useState} from 'react'
+import React, {useCallback, useReducer} from 'react'
 
 // Imports CSS module as JS object
 import s from './comments.module.scss'
@@ -93,19 +93,9 @@ function Comments({
                     text: action.payload
                 }
             case 'ADD_COMMENT':
-                const date = new Date()
-                const currDate = date.toISOString().split('T')[0]
-                const newComment = {
-                    ...comment,
-                    createdAt: currDate
-                }
-
-                addComment(newComment)
-                changeCommentCount(commentsCount + 1, articleId)
-
                 return {
                     ...comment,
-                    createdAt: currDate,
+                    createdAt: action.payload,
                     commentId: comment.commentId + 1
                 }
             case 'DELETE_COMMENT':
@@ -135,6 +125,19 @@ function Comments({
         editComment(newComment)
     }, [])
 
+    function addCommentFunction() {
+        const date = new Date()
+        const currDate = date.toISOString().split('T')[0]
+        const newComment = {
+            ...comment,
+            createdAt: currDate
+        }
+
+        addComment(newComment)
+        changeCommentCount(commentsCount + 1, articleId)
+
+        dispatchComment({type: 'ADD_COMMENT', payload: currDate})
+    }
 
     return (
         <>
@@ -198,7 +201,7 @@ function Comments({
                           onChange={(event) => dispatchComment({type: 'SET_TEXT', payload: event.target.value})}
                 />
                 <div className={s.addButton}
-                     onClick={() => dispatchComment({type: 'ADD_COMMENT'})}> Add </div>
+                     onClick={addCommentFunction}> Add </div>
             </div>
         </>
 

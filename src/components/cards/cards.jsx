@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react'
+import React, {useReducer} from 'react'
 
 import s from './cards.module.scss';
 
@@ -35,8 +35,8 @@ function Cards({
 }) {
     const initialArticle = {
             articleId: 100,
-            title: null,
-            text: null,
+            title: "",
+            text: "",
             currentLikes: 0,
             commentsCount: 0,
             createdAt: "",
@@ -74,17 +74,9 @@ function Cards({
                     text: action.payload
                 }
             case 'ADD_ARTICLE':
-                const date = new Date()
-                const currDate = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay()
-
-                const newArticle = {
-                    ...article,
-                    createdAt: currDate
-                }
-                addArticle(newArticle)
                 return {
                     ...article,
-                    createdAt: currDate,
+                    createdAt: action.payload,
                     articleId: article.articleId + 1
                 }
             default:
@@ -95,6 +87,18 @@ function Cards({
     const [sorted, sort] = useReducer(reducerSorting, 0, init);
 
     const [article, dispatchArticle] = useReducer(reducerArticle, initialArticle, init)
+
+    function addArticleFunction() {
+        const date = new Date()
+        const currDate = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay()
+
+        const newArticle = {
+            ...article,
+            createdAt: currDate
+        }
+        addArticle(newArticle)
+        dispatchArticle({type: 'ADD_ARTICLE', payload: currDate})
+    }
 
 
     return (
@@ -149,7 +153,7 @@ function Cards({
                     <textarea className={s.textInput} placeholder="Your text of article" value={article.text}
                               onChange={(event) => dispatchArticle({type: 'SET_TEXT', payload: event.target.value})}/>
                     <div className={s.addButton}
-                         onClick={() => dispatchArticle({type: 'ADD_ARTICLE'})}>Add</div>
+                         onClick={addArticleFunction}>Add</div>
                 </div>
             </>
     );
