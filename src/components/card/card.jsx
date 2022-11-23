@@ -1,16 +1,17 @@
-import React, {useState} from 'react'
+import React, {useEffect, useReducer, useState} from 'react'
 import classnames from 'classnames/bind'
-import {useParams} from 'react-router';
-import {connect} from 'react-redux';
+import { useParams } from 'react-router';
+import { connect } from 'react-redux';
 
 // Imports CSS module as JS object
 import s from './card.module.scss'
 
 import Comments from '../comments/comments';
 import EditImg from '../../common/img/edit_img_violet.png';
-import {getArticleById} from '../../common/helpers/get-article-by-id';
-import {actionEditArticle} from '../../common/store/actions/editArticle';
-import {Link} from 'react-router-dom';
+import { getArticleById } from '../../common/helpers/get-article-by-id';
+import { actionEditArticle } from '../../common/store/actions/editArticle';
+import  { init } from '../../common/store/actions/init';
+import { Link } from 'react-router-dom';
 
 const cx = classnames.bind(s);
 
@@ -38,14 +39,65 @@ function Card({articles, editArticle}) {
         count: article.commentsCount
     })
 
-    const [updateArticle, setUpdateArticle] = useState({
+    const initialUpdateArticle = {
         title: article.title,
         newTitle: article.title,
         text: article.text,
         newText: article.text,
         isEditing: false,
         createdAt: article.createdAt
-    })
+    };
+
+    function reducerUpdatedArticle(updateArticle, action) {
+        switch (action.type) {
+            case 'SET_TEXT':
+                return {
+                    ...updateArticle,
+                    newText: action.payload
+                }
+            case 'SET_TITLE':
+                return {
+                    ...updateArticle,
+                    newTitle: action.payload
+                }
+            case 'END_EDIT':
+                const newArticle = {
+                    ...article,
+                    text: updateArticle.newText,
+                    title: updateArticle.newTitle
+                }
+
+                editArticle(newArticle)
+
+                setArticle(newArticle)
+                return {
+                    ...updateArticle,
+                    isEditing: false,
+                    text: updateArticle.newText,
+                    title: updateArticle.newTitle
+                }
+            case 'START_EDIT':
+                return {
+                    ...updateArticle,
+                    isEditing: true,
+                    newText: updateArticle.text,
+                    newTitle: updateArticle.title
+                }
+            default:
+                return updateArticle;
+
+        }
+    }
+
+
+    useEffect(() => {
+        console.groupCollapsed()
+        console.log(`User at card: ${article.title}`)
+
+        return () => {
+            console.groupEnd()
+        }
+    }, [])
 
 
     const likeDislike = () => {
@@ -70,51 +122,7 @@ function Card({articles, editArticle}) {
         }))
     }
 
-    const startEdit = () => {
-        setUpdateArticle({
-            ...updateArticle,
-            isEditing: true,
-            newText: updateArticle.text
-        })
-    }
-
-    const setNewText = event => {
-        const { value } = event.target
-        setUpdateArticle( {
-                ...updateArticle,
-                newText: value
-            }
-        )
-    }
-
-    const setNewTitle = event => {
-        const { value } = event.target
-        setUpdateArticle( {
-                ...updateArticle,
-                newTitle: value
-            }
-        )
-    }
-
-    const endEdit = () => {
-        setUpdateArticle({
-            ...updateArticle,
-            isEditing: false,
-            text: updateArticle.newText,
-            title: updateArticle.newTitle
-        })
-        const newArticle = {
-            ...article,
-            text: updateArticle.newText,
-            title: updateArticle.newTitle
-        }
-
-        editArticle(newArticle)
-
-        setArticle(newArticle)
-
-    }
-
+    const [updateArticle, dispatchUpdateArticle] = useReducer(reducerUpdatedArticle, initialUpdateArticle, init);
 
     return (
         <>
@@ -126,8 +134,17 @@ function Card({articles, editArticle}) {
                 {updateArticle.isEditing
                     ?
                     <>
-                        <input className={s.titleInput} type="text" value={updateArticle.newTitle} onChange={setNewTitle} placeholder={updateArticle.newTitle} />
-                        <textarea className={s.textInput} placeholder={updateArticle.newText} value={updateArticle.newText} onChange={setNewText} />
+                        <input className={s.titleInput}
+                               type="text"
+                               value={updateArticle.newTitle}
+                               onChange={(event) => dispatchUpdateArticle({type: 'SET_TITLE', payload: event.target.value})}
+                               placeholder={updateArticle.newTitle}
+                        />
+                        <textarea className={s.textInput}
+                                  placeholder={updateArticle.newText}
+                                  value={updateArticle.newText}
+                                  onChange={(event) => dispatchUpdateArticle({type: 'SET_TEXT', payload: event.target.value})}
+                        />
                     </>
                     :
                     <>
@@ -137,9 +154,9 @@ function Card({articles, editArticle}) {
                 }
                 {updateArticle.isEditing
                     ?
-                    <div className={s.saveEditing} onClick={endEdit}> save </div>
+                    <div className={s.saveEditing} onClick={() => dispatchUpdateArticle({type: 'END_EDIT'})}> save </div>
                     :
-                    <img src={EditImg} onClick={startEdit}/>
+                    <img src={EditImg} onClick={() => dispatchUpdateArticle({type: 'START_EDIT'})}/>
                 }
                 <div className={s.likesHeart}>
                     <div className={s.likes}>{article.currentLikes}</div>

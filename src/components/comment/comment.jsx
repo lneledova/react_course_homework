@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useCallback, useReducer, useState} from 'react'
 import classnames from 'classnames/bind'
 
 // Imports CSS module as JS object
@@ -8,20 +8,12 @@ import EditImg from '../../common/img/edit_img_red.png';
 
 const cx = classnames.bind(s);
 
+function init(initial) {
+    return {...initial};
+}
+
+
 export function Comment({commentId, author, text, currentLikes, createdAt, articleId,  changeComment}) {
-
-    const [like, setLike] = useState({
-        isLike: 1,
-        color: 'gray'
-    })
-
-    const [updateComment, setUpdateComment] = useState({
-            text: text,
-            newText: text,
-            createdAt: null,
-            isEditing: false
-        }
-    )
 
     const [comment, setComment] = useState({
         commentId,
@@ -31,6 +23,53 @@ export function Comment({commentId, author, text, currentLikes, createdAt, artic
         currentLikes,
         createdAt,
     })
+
+    const [like, setLike] = useState({
+        isLike: 1,
+        color: 'gray'
+    })
+
+    const initialStateUpdateComment = {
+        text: text,
+        newText: text,
+        createdAt: null,
+        isEditing: false
+    }
+
+    function reducerUpdateComment(updateComment, action) {
+        switch (action.type) {
+            case 'START_EDIT':
+                return {
+                    ...updateComment,
+                    isEditing: true,
+                    newText: updateComment.text
+                };
+            case 'END_EDIT':
+                setComment({
+                    ...comment,
+                    text: updateComment.newText
+                })
+
+                const newComment = {
+                    ...comment,
+                    text: updateComment.newText
+                }
+
+                changeComment(newComment)
+                return {
+                     ...updateComment,
+                     isEditing: false,
+                     text: updateComment.newText
+                };
+            case 'SET_TEXT':
+                return {
+                    ...updateComment,
+                    newText: action.payload
+                }
+            default:
+                return updateComment;
+        }
+    }
 
 
     const likeDislike = () => {
@@ -48,42 +87,7 @@ export function Comment({commentId, author, text, currentLikes, createdAt, artic
         setComment(newComment)
     }
 
-    const startEdit = () => {
-        setUpdateComment({
-            ...updateComment,
-            isEditing: true,
-            newText: updateComment.text
-        })
-    }
-
-    const setNewText = event => {
-        const { value } = event.target
-        setUpdateComment( {
-                ...updateComment,
-                newText: value
-            }
-        )
-    }
-
-    const endEdit = () => {
-        setUpdateComment({
-            ...updateComment,
-            isEditing: false,
-            text: updateComment.newText
-        })
-        setComment({
-            ...comment,
-            text: updateComment.newText
-        })
-
-        const newComment = {
-            ...comment,
-            text: updateComment.newText
-        }
-
-        changeComment(newComment)
-    }
-
+    const [updateComment, dispatchUpdateComment] = useReducer(reducerUpdateComment, initialStateUpdateComment, init);
 
     return (
         <>
@@ -94,7 +98,10 @@ export function Comment({commentId, author, text, currentLikes, createdAt, artic
                 </div>
                 {updateComment.isEditing
                     ?
-                    <textarea className={s.commentInput} placeholder={updateComment.newText}  value={updateComment.newText} onChange={setNewText} />
+                    <textarea className={s.commentInput}
+                              placeholder={updateComment.newText}
+                              value={updateComment.newText}
+                              onChange={(event) => dispatchUpdateComment({type: 'SET_TEXT', payload: event.target.value})} />
                     :
                     <div className={s.commentText}> {updateComment.text} </div>
                 }
@@ -103,9 +110,9 @@ export function Comment({commentId, author, text, currentLikes, createdAt, artic
                     <div className={cx('heart', `heart-color-${like.color}`)} onClick={likeDislike}></div>
                     {updateComment.isEditing
                         ?
-                        <div className={s.saveEditing} onClick={endEdit}> save </div>
+                        <div className={s.saveEditing} onClick={() => dispatchUpdateComment({type: 'END_EDIT'})}> save </div>
                         :
-                        <img src={EditImg} onClick={startEdit}/>}
+                        <img src={EditImg} onClick={() => dispatchUpdateComment({type: 'START_EDIT'})}/>}
                 </div>
             </div>
         </>
