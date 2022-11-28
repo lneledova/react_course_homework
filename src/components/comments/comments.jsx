@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useCallback, useReducer} from 'react'
 
 // Imports CSS module as JS object
 import s from './comments.module.scss'
@@ -16,6 +16,7 @@ import {actionSortCommentsDecDate} from '../../common/store/actions/sortComments
 import {actionSortCommentsAscDate} from '../../common/store/actions/sortCommentsAscDate';
 import {actionSortCommentsDecLike} from '../../common/store/actions/sortCommentsDecLike';
 import {actionSortCommentsAscLike} from '../../common/store/actions/sortCommentsAscLike';
+import {init} from "../../common/store/actions/init";
 
 
 const mapStateToProps = (state) => ({
@@ -51,68 +52,64 @@ function Comments({
     const commentsCount = getCountOfComments(articles, articleId)
     const commentsStore = selectByArticleId(comments, articleId)
 
-    const [sorted, setSorted] = useState(0)
-    const [comment, setComment] = useState({
+    const initialComment = {
         commentId: 10,
         author: "",
         text: "",
         articleId: articleId,
         createdAt: "",
         currentLikes: 0
-    })
-
-    const deleteCommentHandler = (delete_id) => {
-        deleteComment(delete_id)
-        changeCommentCount(commentsCount - 1, articleId)
     }
 
-    const addCommentHandler = () => {
-        const date = new Date()
-        const currDate = date.toISOString().split('T')[0]
-        const newComment = {
-            ...comment,
-            createdAt: currDate
+    function reducerSorting(sorted, action) {
+        switch (action.type) {
+            case 'DEC_LIKE':
+                sortCommentsDecLike()
+                return sorted + 1
+            case 'ASC_LIKE':
+                sortCommentsAscLike()
+                return sorted + 1
+            case 'DEC_DATE':
+                sortCommentsDecDate()
+                return sorted + 1
+            case 'ASC_DATE':
+                sortCommentsAscDate()
+                return sorted + 1
+            default:
+                return sorted
         }
-
-        addComment(newComment)
-        changeCommentCount(commentsCount + 1, articleId)
-
-        setComment( {
-            ...comment,
-            createdAt: currDate,
-            commentId: comment.commentId + 1
-        })
     }
 
-    const setAuthor = event => setComment({
-        ...comment,
-        author: event.target.value
-    })
-
-    const setText = event => setComment({
-        ...comment,
-        text: event.target.value
-    })
-
-    const sortDateIncComments = () => {
-        sortCommentsAscDate()
-        setSorted(sorted + 1)
+    function reducerComment(comment, action) {
+        switch (action.type) {
+            case 'SET_AUTHOR':
+                return {
+                    ...comment,
+                    author: action.payload
+                }
+            case 'SET_TEXT':
+                return {
+                    ...comment,
+                    text: action.payload
+                }
+            case 'ADD_COMMENT':
+                return {
+                    ...comment,
+                    createdAt: action.payload,
+                    commentId: comment.commentId + 1
+                }
+            case 'DELETE_COMMENT':
+                deleteComment(action.payload)
+                changeCommentCount(commentsCount - 1, articleId)
+                return comment
+            default:
+                return comment
+        }
     }
 
-    const sortDateDecComments = () => {
-        sortCommentsDecDate()
-        setSorted(sorted + 1)
-    }
+    const [sorted, sort] = useReducer(reducerSorting, 0, init);
 
-    const sortLikeIncComments = () => {
-        sortCommentsAscLike()
-        setSorted(sorted + 1)
-    }
-
-    const sortLikeDecComments = () => {
-        sortCommentsDecLike()
-        setSorted(sorted + 1)
-    }
+    const [comment, dispatchComment] = useReducer(reducerComment, initialComment, init);
 
     const commentSizeText = () => {
         if (commentsCount === 0) {
@@ -124,10 +121,23 @@ function Comments({
         return "There are " +  commentsCount + " comments"
     }
 
-    const changeComment = (newComment) => {
+    const changeCommentCallback = useCallback((newComment) => {
         editComment(newComment)
-    }
+    }, [])
 
+    function addCommentFunction() {
+        const date = new Date()
+        const currDate = date.toISOString().split('T')[0]
+        const newComment = {
+            ...comment,
+            createdAt: currDate
+        }
+
+        addComment(newComment)
+        changeCommentCount(commentsCount + 1, articleId)
+
+        dispatchComment({type: 'ADD_COMMENT', payload: currDate})
+    }
 
     return (
         <>
@@ -139,16 +149,16 @@ function Comments({
                         <h3>
                             <p>Select sorting method for comments:</p>
                             <div>
-                                <input type="radio" onChange={sortDateIncComments} name="sort" />
+                                <input type="radio" onChange={() => sort({type: 'ASC_DATE'})} name="sort" />
                                 <label>By date increasing</label>
 
-                                <input type="radio" onChange={sortDateDecComments} name="sort"/>
+                                <input type="radio" onChange={() => sort({type: 'DEC_DATE'})} name="sort"/>
                                 <label>By date decreasing</label>
                                 <br></br>
-                                <input type="radio" onChange={sortLikeIncComments} name="sort"/>
+                                <input type="radio" onChange={() => sort({type: 'ASC_LIKE'})} name="sort"/>
                                 <label>By likes increasing</label>
 
-                                <input type="radio" onChange={sortLikeDecComments} name="sort"/>
+                                <input type="radio" onChange={() => sort({type: 'DEC_LIKE'})} name="sort"/>
                                 <label>By likes decreasing</label>
                             </div>
                         </h3>
@@ -163,9 +173,10 @@ function Comments({
                             currentLikes={item.currentLikes}
                             createdAt={item.createdAt}
                             articleId={articleId}
-                            changeComment={changeComment}
+                            changeComment={changeCommentCallback}
                         />
-                        <div className={s.deleteComment} onClick={() => deleteCommentHandler(item.commentId)}> delete </div>
+                        <div className={s.deleteComment}
+                             onClick={() => dispatchComment({type: 'DELETE_COMMENT', payload: item.commentId})}> delete </div>
                     </div>
                     )}
                     </>
@@ -177,10 +188,20 @@ function Comments({
             </div>
 
             <div className={s.formAddComment}>
-                <div className={s.headerForm}>Write your own comment</div>
-                <input className={s.authorInput} type="text" value={comment.author} onChange={setAuthor} placeholder="Your name" />
-                <textarea className={s.commentInput} placeholder="Your comment" value={comment.text} onChange={setText} />
-                <div className={s.addButton} onClick={addCommentHandler}>Add</div>
+                <div className={s.headerForm}> Write your own comment </div>
+                <input className={s.authorInput}
+                       type="text"
+                       value={comment.author}
+                       onChange={(event) => dispatchComment({type: 'SET_AUTHOR', payload: event.target.value})}
+                       placeholder="Your name"
+                />
+                <textarea className={s.commentInput}
+                          placeholder="Your comment"
+                          value={comment.text}
+                          onChange={(event) => dispatchComment({type: 'SET_TEXT', payload: event.target.value})}
+                />
+                <div className={s.addButton}
+                     onClick={addCommentFunction}> Add </div>
             </div>
         </>
 
